@@ -1,0 +1,5 @@
+{
+  "name": "ScholarPrompt",
+  "description": "A specialized prompt engineering tool for academic research, writing, and analysis. Generates structured, high-quality prompts for LLMs and allows immediate testing via Gemini.",
+  "requestFramePermissions": []
+}
