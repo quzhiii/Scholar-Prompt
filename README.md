@@ -30,7 +30,7 @@
 - **方法与分析**：生成Python数据清洗脚本，推荐研究方法及经典文献
 - **投稿辅助**：生成审稿回复信，外交化回应严厉批评
 
-#### 🏗️ 2. 牛津标准提示词架构
+#### 🏗️ 2. 学术标准提示词架构
 每个模板均采用结构化的六要素提示词设计：
 ```
 1. Role (角色定位) - 确立AI的专业身份
@@ -176,7 +176,7 @@ scholarprompt/
 - **Methods & Analysis**: Generate Python data cleaning scripts, recommend methodologies
 - **Submission Support**: Generate diplomatic reviewer rebuttals
 
-#### 🏗️ 2. Oxford Standard Prompt Architecture
+#### 🏗️ 2. Standard Prompt Architecture
 Every template follows a structured 6-element design:
 ```
 1. Role - Establish AI's professional identity
