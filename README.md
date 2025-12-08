@@ -18,7 +18,7 @@
 
 ### 📖 项目简介
 
-**ScholarPrompt** 是一款专为学术研究人员打造的智能提示词工程工具，基于前沿的 **牛津标准提示词架构** (Oxford Standard Prompt Framework)，帮助科研工作者高效利用大语言模型（LLM）完成文献综述、论文写作、数据分析等学术任务。
+**ScholarPrompt** 是一款专为学术研究人员打造的智能提示词工程工具，基于前沿的 **标准提示词架构** (Standard Prompt Framework)，帮助科研工作者高效利用大语言模型（LLM）完成文献综述、论文写作、数据分析等学术任务。
 
 ### ✨ 核心亮点
 
@@ -164,7 +164,7 @@ scholarprompt/
 
 ### 📖 About
 
-**ScholarPrompt** is a professional prompt engineering tool designed specifically for academic researchers. Built on the cutting-edge **Oxford Standard Prompt Framework**, it helps scholars efficiently leverage Large Language Models (LLMs) for literature review, academic writing, data analysis, and more.
+**ScholarPrompt** is a professional prompt engineering tool designed specifically for academic researchers. Built on the cutting-edge **Standard Prompt Framework**, it helps scholars efficiently leverage Large Language Models (LLMs) for literature review, academic writing, data analysis, and more.
 
 ### ✨ Key Highlights
 
