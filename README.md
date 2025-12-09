@@ -44,12 +44,12 @@
 这种架构确保生成的提示词**清晰、严谨、可复现**，显著提升LLM输出质量。
 
 #### 🔄 3. 多模型支持
-- **原生Gemini模式**：支持文件上传（PDF多文档分析）
-- **自定义API模式**：兼容OpenAI格式的所有国内外模型
-  - DeepSeek (深度求索)
-  - Qwen (通义千问)
-  - Kimi (月之暗面)
-  - Claude / GPT-5 等
+- **Kimi K2 模式**：✅ 原生PDF支持，已测试可用（推荐）
+  - kimi-k2-turbo-preview（最新）
+  - moonshot-v1-128k/32k/8k
+- **Gemini 模式**：备选方案，但需付费
+  - gemini-2.0-flash-exp
+  - gemini-1.5-pro
 
 #### 🌍 4. 双语界面与模板
 - 完整的中英文双语支持
@@ -81,59 +81,46 @@
    > 3. **自行部署到国内服务器** - 如阿里云/腾讯云静态托管
    > 
    > **CORS 跨域说明**：
-   > - ✅ 通义千问、Gemini、Kimi：可直接使用，无跨域问题
-   > - 🔧 DeepSeek、智谱GLM：已内置代理功能，自动解决跨域
-   > - 📝 所有服务商在 Vercel 部署版上都能正常使用
+   > - ✅ Kimi K2：已测试可用，无跨域问题（推荐）
+   > - ✅ Gemini：原生支持，但需付费
+   > 
+   > **CORS 跨域说明**：
+   > - ✅ Kimi K2：已测试可用，无跨域问题（推荐）
+   > - ✅ Gemini：原生支持，但需付费
 
 2. **首次配置 API Key**（仅需一次）：
    
    点击左下角 **⚙️ 设置** → 按以下步骤配置：
 
-   **方式 A：使用国内 AI 服务（🔥 推荐 - 性价比高）**
+   **🏆 推荐方案：Kimi K2（已测试可用 - 原生PDF支持）**
    
-   | 服务商 | 免费额度 | 价格（输入/输出） | PDF支持 | 性价比 | 推荐指数 |
-   |--------|---------|------------------|---------|--------|----------|
-   | **DeepSeek v3.2** ⭐ | ￥5 | ￥0.1/￥0.28 每百万tokens | ✅ | 🌟🌟🌟🌟🌟 |
-   | **Kimi R2** | 免费试用 | ￥0.1/￥0.1 每百万tokens | ✅ 原生 | 🌟🌟🌟🌟 | 
-   | **智谱 GLM-4.6** | ￥25 | ￥5/￥5 每百万tokens | ✅ | 🌟🌟🌟 | 
-   | **通义千问** | 免费试用 | ￥0.4/￥1.2 每百万tokens | ✅ | 🌟🌟🌟🌟 |
+   | 模型 | PDF支持 | 特点 | 推荐指数 |
+   |------|---------|------|----------|
+   | **kimi-k2-turbo-preview** ⭐ | ✅ 原生 | 最新K2，已测试可用 | 🌟🌟🌟🌟🌟 |
+   | **moonshot-v1-128k** | ✅ 原生 | 128K超长上下文 | 🌟🌟🌟🌟 |
 
-   **🏆 性价比冠军：DeepSeek v3.2**
-   - 💰 **价格最低**：输入仅 ￥0.1/百万tokens（比 GPT-4 便宜 100 倍）
-   - 🧠 **思考能力强**：支持深度推理模式
-   - 🎁 **新用户福利**：注册送 ￥5 额度（约 500 万 tokens）
-   - ✅ **支持 PDF 上传**：通过 Vision API
-
-   **快速配置 DeepSeek（推荐）：**
+   **快速配置 Kimi K2（推荐）：**
    ```
-   1. 访问: https://platform.deepseek.com
-   2. 注册账号（赠送 ￥5）
-   3. 创建 API Key
+   1. 访问: https://platform.moonshot.cn
+   2. 注册账号 → 充值（最低10元）
+   3. 创建 API Key → 复制
    4. 在 ScholarPrompt 设置中：
-      - 选择"国内 AI 服务商"
-      - Base URL: https://api.deepseek.com/v1
-      - API Key: 粘贴你的密钥
-      - Model: deepseek-chat
+      - 选择"Kimi"区块
+      - 📄 从下拉菜单选择: kimi-k2-turbo-preview (自动填充配置)
+      - Base URL: https://api.moonshot.cn/v1 (已自动填充)
+      - API Key: 粘贴您的 Key
+      - Model: kimi-k2-turbo-preview (已自动填充)
    5. 点击"保存配置"
    ```
-
-   **其他服务商配置：**
-   - **Kimi**: https://platform.moonshot.cn （原生PDF支持，128K上下文）
-     - Base URL: `https://api.moonshot.cn/v1`
-     - Model: `moonshot-v1-auto`
    
-   - **智谱 GLM**: https://open.bigmodel.cn （多模态能力强）
-     - Base URL: `https://open.bigmodel.cn/api/paas/v4`
-     - Model: `glm-4v-plus`
-   
-   - **通义千问**: https://bailian.console.aliyun.com （阿里云生态）
-     - Base URL: `https://dashscope.aliyuncs.com/compatible-mode/v1`
-     - Model: `qwen-vl-max`
+   > ✅ **已测试确认**: kimi-k2-turbo-preview 在浏览器环境完全可用
 
-   **方式 B:使用 Gemini API(需付费)**
-   - ⚠️ 免费配额已取消 | 💵 价格: $0.075-0.30/M tokens
-   - ✅ 优势:原生 PDF 支持,多模态能力最强
-   - 📖 教程请看下方 → [API Key 获取教程](#-api-key-获取教程)
+   **备选方案：Google Gemini（需付费）**
+   
+   - 访问: https://ai.google.dev/aistudio
+   - ⚠️ 注意: Gemini免费额度已取消，需绑定付费账户
+   - ✅ 优势: 多模态能力最强
+   - 💵 价格: $0.075-0.30/M tokens
 
 3. **开始使用**！
    - 选择左侧模板类别
@@ -275,24 +262,20 @@ scholarprompt/
 
 **什么是 CORS？**
 
-CORS (Cross-Origin Resource Sharing) 是浏览器的安全机制。当您的网站 (scholarprompt.vercel.app) 调用其他域名的 API (api.deepseek.com) 时，浏览器会检查 API 服务器是否允许跨域访问。
+CORS (Cross-Origin Resource Sharing) 是浏览器的安全机制。当您的网站调用其他域名的 API 时，浏览器会检查 API 服务器是否允许跨域访问。
 
 **ScholarPrompt 的解决方案：**
 
-✅ **已解决！所有服务商现已可用**
+✅ **Kimi K2 原生支持 CORS**
 
-- **无需代理**: Gemini、通义千问、Kimi - API 原生支持 CORS
-- **自动代理**: DeepSeek、智谱GLM - 通过 Vercel Serverless 函数自动转发
-- **完全透明**: 用户无需任何额外配置，自动检测并使用代理
+- **无需代理**: Kimi API 原生支持 CORS，直接调用
+- **已测试确认**: kimi-k2-turbo-preview 在浏览器环境完全可用
+- **完全透明**: 用户无需任何额外配置
 
-**技术实现** (开发者参考):
-```
-浏览器 → Vercel 函数 (/api/proxy) → DeepSeek API
-       ↓ 添加 CORS 头
-     返回结果
-```
-
-代码位置: `api/proxy.ts` 和 `services/geminiService.ts`
+**技术细节** (开发者参考):
+- Kimi API (api.moonshot.cn) 返回正确的 CORS 头
+- 支持浏览器直接调用，无需服务器中转
+- 测试工具: test-api.html
 
 ---
 
@@ -303,104 +286,78 @@ CORS (Cross-Origin Resource Sharing) 是浏览器的安全机制。当您的网�
 #### 为什么这样设计？
 
 1. **🔒 安全性**: API Key 保存在本地浏览器，所有调用在您的浏览器中完成，永不上传
-2. **💰 超低成本**: 使用 DeepSeek 新用户送 ￥5（约 5000 万 tokens），每天使用成本 < ￥1
-3. **⚡ 灵活性**: 可选择任何兼容的 AI 服务商，自主控制使用频率
+2. **💰 低成本**: 使用 Kimi K2 性价比高，适合学术研究
+3. **⚡ 灵活性**: 可选择 Kimi 或 Gemini，自主控制使用频率
 
 #### API 服务商价格对比（2025年最新）
 
-| 服务商 | 注册赠送 | 输入价格 | 输出价格 | PDF支持 | 综合评分 |
-|--------|---------|---------|---------|---------|----------|
-| **DeepSeek v3** 🏆 | ￥5 | ￥0.1/M tokens | ￥0.28/M tokens | ✅ | ⭐⭐⭐⭐⭐ |
-| **Kimi R2** | 试用额度 | ￥0.1/M tokens | ￥0.1/M tokens | ✅ 原生 | ⭐⭐⭐⭐ |
-| **通义千问** | 试用额度 | ￥0.4/M tokens | ￥1.2/M tokens | ✅ | ⭐⭐⭐⭐ |
-| **智谱 GLM-4** | ￥25 | ￥5/M tokens | ￥5/M tokens | ✅ | ⭐⭐⭐ |
-| **Gemini Flash** | 已取消 | $0.075/M tokens | $0.30/M tokens | ✅ 原生 | ⭐⭐⭐ |
-
-**💰 费用估算（以 DeepSeek 为例）：**
-- **文献综述**（3万字）：约 ￥0.02
-- **论文写作**（5千字 × 5次修改）：约 ￥0.05
-- **数据分析**（生成Python代码）：约 ￥0.01
-- **每日重度使用**（20次生成）：约 ￥0.50
-- **￥5 赠送额度可使用 100+ 天**
+| 服务商 | PDF支持 | 价格 | 综合评分 |
+|--------|---------|------|----------|
+| **Kimi K2 Turbo** ⭐ | 低成本 | 低成本 | 低成本 | ✅ 原生 | ⭐⭐⭐⭐⭐ |
+| **Moonshot V1-128k** | 低成本 | 低成本 | 低成本 | ✅ 原生 | ⭐⭐⭐⭐ |
+| **Gemini Flash** | 已取消免费 | $0.075/M tokens | $0.30/M tokens | ✅ 原生 | ⭐⭐⭐ |
 
 💡 **推荐配置**：
-- 🏆 **性价比最高** → **DeepSeek v3**（新用户送￥5，价格最低）
-- 📄 **PDF 原生支持** → **Kimi R2**（128K上下文，PDF解析好）
-- 🇨🇳 **国内网络稳定** → **通义千问** / **智谱 GLM**
-- 🌟 **最强能力（付费）** → **Gemini 3 Pro**（多模态最强）
+- 🏆 **已测试可用** → **Kimi K2 Turbo**（kimi-k2-turbo-preview，浏览器环境完全支持）
+- 📄 **PDF 原生支持** → **Moonshot V1-128k**（128K超长上下文，稳定可靠）
+- 🌟 **备选方案（付费）** → **Gemini 2.0 Flash**（多模态最强但需付费）
 
 ---
 
 #### 💡 API Key 获取教程
 
-##### 🏆 方法 1: DeepSeek (推荐 - 性价比最高)
+##### 🏆 推荐: Kimi K2 (已测试可用 - 原生PDF支持)
 
-**为什么选择 DeepSeek?**
-- 💰 **价格最低**: ￥0.1/M tokens (输入), ￥0.28/M tokens (输出)
-- 🎁 **新用户福利**: 注册即送 ￥5 (可用 100+ 天)
-- ✅ **支持图片/PDF**: 通过 Vision API 上传文件
-- 🧠 **推理能力强**: DeepSeek-V3 模型性能优秀
+**为什么选择 Kimi K2?**
+- ✅ **已测试确认**: kimi-k2-turbo-preview 在浏览器环境完全可用
+- 📄 **原生 PDF 支持**: 直接上传 PDF 文件，支持 OCR
+- 💰 **价格合理**: 低成本，性价比高
+- 🚀 **最新技术**: K2 系列是 Moonshot 最新一代模型
 
 **配置步骤:**
 
 1. **注册账号**
-   - 访问: https://platform.deepseek.com
+   - 访问: https://platform.moonshot.cn
    - 点击右上角"注册"
-   - 使用手机号或邮箱注册(支持国内手机号)
-   - 新用户自动获得 ￥5 余额
+   - 使用手机号或邮箱注册
 
-2. **获取 API Key**
+2. **充值**
+   - 最低充值 10元
+   - 支持微信/支付宝
+
+3. **获取 API Key**
    - 登录后进入"API Keys"页面
    - 点击"创建 API Key"
-   - 输入名称(如: ScholarPrompt)
-   - 复制生成的密钥(格式: `sk-...`)
+   - 复制生成的密钥
 
-3. **在 ScholarPrompt 中配置**
-   - 打开设置 → 展开"国内 AI 服务商"
-   - **服务商**: 选择 DeepSeek
-   - **Base URL**: 自动填充为 `https://api.deepseek.com/v1`
-   - **API Key**: 粘贴你的 `sk-...` 密钥
-   - **Model**: 选择 `deepseek-chat`
+4. **在 ScholarPrompt 中配置**
+   - 打开设置 → 展开"Kimi"区块
+   - 📄 从下拉菜单选择: **kimi-k2-turbo-preview** (自动填充配置)
+   - **Base URL**: https://api.moonshot.cn/v1 (已自动填充)
+   - **API Key**: 粘贴您的密钥
+   - **Model**: kimi-k2-turbo-preview (已自动填充)
    - 点击"保存配置"
 
-4. **开始使用**
-   - ￥5 额度 ≈ 5000万 tokens
-   - 生成一篇综述约消耗 ￥0.02
-   - 可用 100+ 天(每天重度使用)
+5. **开始使用**
+   - ✅ 已在 test-api.html 测试通过
+   - 支持多文档PDF分析
+   - 无 CORS 跨域问题
 
 ---
 
-##### 📄 方法 2: Kimi (原生 PDF 支持)
+##### 🌐 备选方案: Google Gemini (需付费)
 
-**适合场景**: 需要直接上传多个 PDF 文献分析
-
-1. 访问: https://platform.moonshot.cn
-2. 注册并获取 API Key
-3. 在设置中选择 Kimi,Base URL 自动填充
-4. 模型选择: `moonshot-v1-auto`
-
----
-
-##### 🌐 方法 3: Google Gemini (需付费)
-
-**注意**: Gemini 免费额度已取消,需绑定付费账号
+**注意**: Gemini 免费额度已取消，需绑定付费账号
 
 1. 访问: https://ai.google.dev/aistudio
 2. 登录 Google 账号并绑定付费信息
 3. 创建 API Key(格式: `AIza...`)
-4. 在设置中选择 Gemini,配置会自动填充
-5. 推荐模型: `gemini-3-pro-preview` 或 `gemini-2.0-flash-exp`
+4. 在设置中选择 Gemini，配置会自动填充
+5. 推荐模型: `gemini-2.0-flash-exp`
 
 ---
 
-**其他国内服务商:**
-
-| 服务商 | 注册地址 | 特点 |
-|--------|---------|------|
-| 智谱 GLM | https://open.bigmodel.cn | 多模态能力强,送￥25 |
-| 通义千问 | https://bailian.console.aliyun.com | 阿里云生态,稳定性好 |
-
-⚠️ **隐私保护**: 所有 API Key 仅保存在浏览器本地,不会上传到任何服务器
+⚠️ **隐私保护**: 所有 API Key 仅保存在浏览器本地，不会上传到任何服务器
 
 ---
 
@@ -434,7 +391,7 @@ Every template follows a structured 6-element design:
 #### 🔄 3. Multi-Model Support
 - **Native Gemini**: Supports file uploads (multi-PDF analysis)
 - **Custom API**: Compatible with OpenAI-format endpoints
-  - DeepSeek, Qwen, Kimi (Moonshot)
+  - Kimi K2 (Moonshot)
   - Claude, GPT-4, etc.
 
 #### 🌍 4. Bilingual Interface
@@ -461,7 +418,7 @@ Every template follows a structured 6-element design:
    - Click "Settings" icon ⚙️ in the bottom left
    - Choose API Provider:
      - **Gemini** - Free, full-featured (PDF upload support) → [Get API Key](https://ai.google.dev/aistudio)
-     - **Custom API** - DeepSeek/Qwen/Kimi and other services
+     - **Custom API** - Kimi K2 and other compatible services
 
 3. Start using! Select a template, enter content, click "Run with Gemini"
 

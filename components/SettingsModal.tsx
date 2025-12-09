@@ -147,39 +147,28 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                  </div>
               </div>
 
-              {/* Other Providers */}
+              {/* Kimi K2 Provider */}
               <details className="group" open>
                 <summary className="cursor-pointer text-sm text-slate-600 hover:text-slate-800 font-medium py-2">
-                  {lang === 'cn' ? '▼ 国内 AI 服务商 (🏆 推荐 - 性价比高)' : '▼ Domestic AI Providers (🏆 Recommended - Best Value)'}
+                  {lang === 'cn' ? '▼ Kimi (🏆 推荐 - 已测试可用)' : '▼ Kimi (🏆 Recommended - Tested Working)'}
                 </summary>
                 <div className="mt-3 p-4 border border-green-200 rounded-lg space-y-3 bg-green-50">
-                  <div className="bg-amber-50 border border-amber-300 text-amber-900 p-4 rounded-lg text-sm">
-                      <p className="font-bold mb-2 flex items-center gap-2">
-                        <AlertTriangle size={16} />
-                        {lang === 'cn' ? '⚠️ 重要提示' : '⚠️ Important Notice'}
-                      </p>
-                      <p className="mb-2">
-                        {lang === 'cn' 
-                          ? '目前国内AI服务商（DeepSeek/Kimi/GLM/Qwen）的API在浏览器环境中存在兼容性问题，可能无法正常使用。'
-                          : 'Domestic AI providers may have compatibility issues in browser environments.'}
-                      </p>
-                      <p className="font-semibold text-amber-800">
-                        {lang === 'cn' 
-                          ? '🏆 强烈推荐使用 Google Gemini - 稳定可靠，原生支持PDF，完全免费（有配额限制）。'
-                          : '🏆 Strongly recommend Google Gemini - stable, reliable, native PDF support, free with quota.'}
-                      </p>
-                  </div>
-                  
                   <div className="bg-green-100 border border-green-300 text-green-800 p-3 rounded-lg text-xs">
-                      <p className="font-semibold mb-1">
-                        {lang === 'cn' ? '可用模型:' : 'Available Models:'}
+                      <p className="font-semibold mb-2">
+                        {lang === 'cn' ? '✅ Kimi K2 系列模型（原生PDF支持，已测试可用）' : '✅ Kimi K2 Models (Native PDF, Tested Working)'}
                       </p>
                       <ul className="space-y-0.5 ml-4 text-xs">
-                        <li>• <strong>Qwen</strong>: qwen-vl-max, qwen-vl-plus</li>
-                        <li>• <strong>Kimi</strong>: moonshot-v1-128k, moonshot-v1-32k</li>
-                        <li>• <strong>DeepSeek</strong>: deepseek-chat</li>
-                        <li>• <strong>GLM</strong>: glm-4v-plus</li>
+                        <li>• <strong>kimi-k2-turbo-preview</strong> - {lang === 'cn' ? '最新K2模型(强烈推荐)' : 'Latest K2 (Highly Recommended)'}</li>
+                        <li>• <strong>kimi-k2-0905-preview</strong> - K2 {lang === 'cn' ? '预览版' : 'Preview'}</li>
+                        <li>• <strong>moonshot-v1-128k</strong> - 128K {lang === 'cn' ? '超长上下文' : 'Ultra-long Context'}</li>
+                        <li>• <strong>moonshot-v1-32k</strong> - 32K {lang === 'cn' ? '标准版' : 'Standard'}</li>
+                        <li>• <strong>moonshot-v1-8k</strong> - 8K {lang === 'cn' ? '经济版' : 'Economy'}</li>
                       </ul>
+                      <p className="mt-2 font-semibold text-green-900">
+                        {lang === 'cn' 
+                          ? '💡 获取API Key: https://platform.moonshot.cn' 
+                          : '💡 Get API Key: https://platform.moonshot.cn'}
+                      </p>
                   </div>
                   
                   <div>
@@ -192,22 +181,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                           const selectedModel = e.target.value;
                           if (selectedModel) {
                             const modelConfigs: Record<string, {url: string, model: string}> = {
-                              // Kimi - 原生PDF支持 (注意：需要付费账号才能使用)
-                              'moonshot-v1-8k': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-8k'},
-                              'moonshot-v1-32k': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-32k'},
+                              'kimi-k2-turbo-preview': {url: 'https://api.moonshot.cn/v1', model: 'kimi-k2-turbo-preview'},
+                              'kimi-k2-0905-preview': {url: 'https://api.moonshot.cn/v1', model: 'kimi-k2-0905-preview'},
                               'moonshot-v1-128k': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-128k'},
-                              // DeepSeek - PDF支持
-                              'deepseek-chat': {url: 'https://api.deepseek.com/v1', model: 'deepseek-chat'},
-                              // 通义千问 - PDF支持
-                              'qwen-vl-max': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-vl-max'},
-                              'qwen-vl-plus': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-vl-plus'},
-                              'qwen-max': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-max'},
-                              // 智谱GLM - 仅图片
-                              'glm-4v-plus': {url: 'https://open.bigmodel.cn/api/paas/v4', model: 'glm-4v-plus'},
-                              'glm-4v': {url: 'https://open.bigmodel.cn/api/paas/v4', model: 'glm-4v'},
-                              // OpenAI
-                              'gpt-4o': {url: 'https://api.openai.com/v1', model: 'gpt-4o'},
-                              'gpt-4-turbo': {url: 'https://api.openai.com/v1', model: 'gpt-4-turbo'}
+                              'moonshot-v1-32k': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-32k'},
+                              'moonshot-v1-8k': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-8k'}
                             };
                             const config = modelConfigs[selectedModel];
                             setIsGemini(false);
@@ -223,32 +201,22 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       >
                         <option value="">{lang === 'cn' ? '👆 点击选择模型 (自动填充URL)' : '👆 Select model (auto-fill URL)'}</option>
                         
-                        <optgroup label={lang === 'cn' ? "📄 Kimi - 原生PDF支持 (需付费)" : "📄 Kimi - Native PDF (Paid)"}>
-                          <option value="moonshot-v1-128k">moonshot-v1-128k (🏆 128K {lang === 'cn' ? '推荐-超长文献' : 'Recommended'})</option>
+                        <optgroup label={lang === 'cn' ? "🏆 Kimi K2 - 最新一代（推荐）" : "🏆 Kimi K2 - Latest Gen (Recommended)"}>
+                          <option value="kimi-k2-turbo-preview">kimi-k2-turbo-preview (🔥 {lang === 'cn' ? '强烈推荐' : 'Highly Recommended'})</option>
+                          <option value="kimi-k2-0905-preview">kimi-k2-0905-preview ({lang === 'cn' ? '预览版' : 'Preview'})</option>
+                        </optgroup>
+                        
+                        <optgroup label={lang === 'cn' ? "📚 Moonshot V1 - 经典稳定" : "📚 Moonshot V1 - Classic Stable"}>
+                          <option value="moonshot-v1-128k">moonshot-v1-128k (128K {lang === 'cn' ? '超长文献' : 'Ultra-long'})</option>
                           <option value="moonshot-v1-32k">moonshot-v1-32k (32K {lang === 'cn' ? '标准' : 'Standard'})</option>
                           <option value="moonshot-v1-8k">moonshot-v1-8k (8K {lang === 'cn' ? '经济' : 'Economy'})</option>
                         </optgroup>
-                        
-                        <optgroup label={lang === 'cn' ? "💰 DeepSeek - PDF支持 (性价比最高)" : "💰 DeepSeek - PDF Support (Best value)"}>
-                          <option value="deepseek-chat">deepseek-chat (￥0.1/M tokens)</option>
-                        </optgroup>
-                        
-                        <optgroup label={lang === 'cn' ? "📄 通义千问 - PDF支持 (阿里云)" : "📄 Qwen - PDF Support (Alibaba)"}>
-                          <option value="qwen-vl-max">qwen-vl-max ({lang === 'cn' ? '多模态最强' : 'Best multimodal'})</option>
-                          <option value="qwen-vl-plus">qwen-vl-plus ({lang === 'cn' ? '性能均衡' : 'Balanced'})</option>
-                          <option value="qwen-max">qwen-max ({lang === 'cn' ? '纯文本最强' : 'Best text-only'})</option>
-                        </optgroup>
-                        
-                        <optgroup label={lang === 'cn' ? "🖼️ 智谱GLM - 仅图片 (❌不支持PDF)" : "🖼️ GLM - Images Only (❌No PDF)"}>
-                          <option value="glm-4v-plus">glm-4v-plus ({lang === 'cn' ? '仅支持图片' : 'Images only'})</option>
+                      </select>
                       <p className="text-[10px] text-slate-500 mt-1">
                         {lang === 'cn' 
                           ? '✅ Base URL 已根据模型自动填充 (可手动修改)' 
                           : '✅ Base URL auto-filled by model (editable)'}
-                      </p><option value="gpt-4o">gpt-4o (Latest)</option>
-                          <option value="gpt-4-turbo">gpt-4-turbo</option>
-                        </optgroup>
-                      </select>
+                      </p>
                   </div>
                   
                   <div>
@@ -260,15 +228,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                           setIsGemini(false);
                           setLocalConfig({...localConfig, provider: 'custom', baseUrl: e.target.value});
                         }}
-                        placeholder="https://api.deepseek.com/v1"
+                        placeholder="https://api.moonshot.cn/v1"
                         className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
-                      <p className="text-[10px] text-slate-500 mt-1">
-                        {lang === 'cn' 
-                          ? '✅ 已自动填充 URL 和模型名称 (可手动修改)' 
-                          : '✅ URL and model auto-filled (can edit manually)'}
-                      </p>
                   </div>
+                  
                   <div>
                       <label className="block text-xs font-bold text-slate-600 mb-1">API Key</label>
                       <input 
@@ -276,13 +240,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         value={!isGemini ? localConfig.apiKey || '' : ''}
                         onChange={(e) => {
                           if (!isGemini) {
-                      <p className="text-[10px] text-slate-500 mt-1">
-                        {lang === 'cn' 
-                          ? '✅ 模型名称已自动填充 (可手动修改)' 
-                          : '✅ Model name auto-filled (editable)'}
-                      </p>assName="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                            setLocalConfig({...localConfig, apiKey: e.target.value});
+                          }
+                        }}
+                        placeholder={lang === 'cn' ? '粘贴您的 Kimi API Key' : 'Paste your Kimi API Key'}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                   </div>
+                  
                   <div>
                       <label className="block text-xs font-bold text-slate-600 mb-1">
                         {lang === 'cn' ? '模型名称' : 'Model Name'}
@@ -295,13 +260,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                             setLocalConfig({...localConfig, modelId: e.target.value});
                           }
                         }}
-                        placeholder="moonshot-v1-auto, deepseek-chat, glm-4v-plus, qwen-vl-max..."
+                        placeholder="kimi-k2-turbo-preview, moonshot-v1-128k..."
                         className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                       <p className="text-[10px] text-slate-500 mt-1">
                         {lang === 'cn' 
-                          ? '✅ 已根据服务商自动填充推荐模型' 
-                          : '✅ Recommended model auto-filled'}
+                          ? '✅ 模型名称已自动填充 (可手动修改)' 
+                          : '✅ Model name auto-filled (editable)'}
                       </p>
                   </div>
                 </div>
