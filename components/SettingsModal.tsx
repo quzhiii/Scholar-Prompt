@@ -30,8 +30,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-fade-in-up">
-        <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden animate-fade-in-up flex flex-col">
+        <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50 flex-shrink-0">
           <div className="flex items-center gap-2 text-slate-800">
              <SettingsIcon size={20} className="text-indigo-600" />
              <h2 className="font-bold">{t.title}</h2>
@@ -41,7 +41,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
           </button>
         </div>
 
-        <div className="p-6 space-y-5">
+        <div className="p-6 space-y-5 overflow-y-auto flex-1">
            
            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
               <p className="text-blue-900 font-semibold mb-2">
@@ -60,24 +60,24 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
               </label>
               
               {/* Gemini API Option */}
-              <div className="mb-3 p-4 border-2 border-indigo-200 rounded-lg bg-indigo-50/50">
+              <div className="mb-3 p-4 border-2 border-amber-200 rounded-lg bg-amber-50/50">
                  <div className="flex items-start gap-3">
                     <div className="flex-1">
-                       <h3 className="font-bold text-indigo-900 mb-1">
-                         Google Gemini {lang === 'cn' ? '(推荐 - PDF支持)' : '(Recommended - PDF Support)'}
+                       <h3 className="font-bold text-amber-900 mb-1">
+                         Google Gemini {lang === 'cn' ? '(需付费 - 原生PDF)' : '(Paid - Native PDF)'}
                        </h3>
-                       <p className="text-xs text-indigo-700 mb-2">
+                       <p className="text-xs text-amber-700 mb-2">
                          {lang === 'cn' 
-                           ? '✅ 原生支持 PDF 文件 | ✅ 免费额度充足 | ✅ 多模态能力强'
-                           : '✅ Native PDF Support | ✅ Generous Free Tier | ✅ Strong Multimodal'}
+                           ? '⚠️ 免费额度已取消 | ✅ 原生 PDF 支持 | ✅ 多模态能力最强'
+                           : '⚠️ Free Tier Removed | ✅ Native PDF | ✅ Strongest Multimodal'}
                        </p>
                        <a 
                          href="https://ai.google.dev/aistudio" 
                          target="_blank" 
                          rel="noopener noreferrer"
-                         className="text-xs text-indigo-600 hover:text-indigo-800 underline font-medium"
+                         className="text-xs text-amber-600 hover:text-amber-800 underline font-medium"
                        >
-                         {lang === 'cn' ? '→ 免费获取 Gemini API Key' : '→ Get Free Gemini API Key'}
+                         {lang === 'cn' ? '→ 获取 Gemini API Key (需绑定付费)' : '→ Get Gemini API Key (Billing Required)'}
                        </a>
                     </div>
                  </div>
@@ -148,29 +148,29 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
               </div>
 
               {/* Other Providers */}
-              <details className="group">
+              <details className="group" open>
                 <summary className="cursor-pointer text-sm text-slate-600 hover:text-slate-800 font-medium py-2">
-                  {lang === 'cn' ? '▶ 或使用国内 AI 服务商 (支持图片/PDF上传)' : '▶ Or Use Domestic AI Providers (Image/PDF Upload Support)'}
+                  {lang === 'cn' ? '▼ 国内 AI 服务商 (🏆 推荐 - 性价比高)' : '▼ Domestic AI Providers (🏆 Recommended - Best Value)'}
                 </summary>
-                <div className="mt-3 p-4 border border-slate-200 rounded-lg space-y-3 bg-slate-50">
-                  <div className="bg-blue-50 border border-blue-200 text-blue-800 p-3 rounded-lg text-xs">
+                <div className="mt-3 p-4 border border-green-200 rounded-lg space-y-3 bg-green-50">
+                  <div className="bg-green-100 border border-green-300 text-green-800 p-3 rounded-lg text-xs">
                       <p className="font-semibold mb-1">
-                        {lang === 'cn' ? '🖼️ 支持图片/PDF上传 (OpenAI Vision格式):' : '🖼️ Image/PDF Upload Support (OpenAI Vision Format):'}
+                        {lang === 'cn' ? '🏆 推荐配置 (性价比最高):' : '🏆 Recommended (Best Value):'}
                       </p>
                       <ul className="space-y-0.5 ml-4">
-                        <li>• <strong>Kimi R2</strong>: moonshot-v1-auto (原生PDF支持 / Native PDF)</li>
-                        <li>• <strong>DeepSeek</strong>: deepseek-chat (图片支持 / Image)</li>
-                        <li>• <strong>{lang === 'cn' ? '智谱' : 'GLM'}</strong>: glm-4v-plus (图片支持 / Image)</li>
-                        <li>• <strong>{lang === 'cn' ? '通义千问' : 'Qwen'}</strong>: qwen-vl-max (图片支持 / Image)</li>
+                        <li>• <strong>DeepSeek v3</strong>: deepseek-chat (￥0.1/M tokens，送￥5)</li>
+                        <li>• <strong>Kimi R2</strong>: moonshot-v1-auto (原生PDF / Native PDF)</li>
+                        <li>• <strong>{lang === 'cn' ? '智谱' : 'GLM'}</strong>: glm-4v-plus (多模态 / Multimodal)</li>
+                        <li>• <strong>{lang === 'cn' ? '通义千问' : 'Qwen'}</strong>: qwen-vl-max (速度快 / Fast)</li>
                       </ul>
                   </div>
                   
-                  <div className="bg-amber-50 text-amber-800 p-3 rounded-lg text-xs flex items-start gap-2">
+                  <div className="bg-blue-50 text-blue-800 p-3 rounded-lg text-xs flex items-start gap-2">
                       <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
                       <p>
                         {lang === 'cn' 
-                          ? '提示: Gemini 原生支持 PDF。Kimi 通过文件API支持PDF。其他服务商通过 Vision API 支持图片（JPG/PNG/WebP）和 PDF（自动转换）。'
-                          : 'Note: Gemini has native PDF support. Kimi supports PDF via file API. Others support images (JPG/PNG/WebP) and PDF (auto-converted) via Vision API.'}
+                          ? '💡 提示: 所有国内服务商都支持图片和 PDF 上传。DeepSeek 性价比最高（￥0.1/M tokens），新用户送 ￥5。'
+                          : '💡 Tip: All domestic providers support image and PDF upload. DeepSeek offers best value (￥0.1/M tokens) with ￥5 bonus.'}
                       </p>
                   </div>
                   
@@ -228,7 +228,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
 
         </div>
 
-        <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+        <div className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3 flex-shrink-0">
             <button 
                onClick={onClose}
                className="px-4 py-2 text-sm text-slate-600 hover:text-slate-800 font-medium"
