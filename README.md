@@ -116,19 +116,10 @@
      - Base URL: `https://dashscope.aliyuncs.com/compatible-mode/v1`
      - Model: `qwen-vl-max`
 
-   **方式 B：使用 Gemini API（需付费）**
-   - ⚠️ **注意**：Gemini 免费配额已取消，现在需要付费
-   - 💵 **价格**：Gemini 1.5 Flash 约 $0.075/$0.30 每百万tokens
-   - ✅ **优势**：原生 PDF 支持，多模态能力强
-   
-   配置步骤：
-   ```
-   1. 访问: https://ai.google.dev/aistudio
-   2. 绑定付费账号
-   3. 创建 API Key
-   4. 在 ScholarPrompt 设置中选择 Gemini
-   5. 模型推荐: gemini-3-pro-preview 或 gemini-2.0-flash-exp
-   ```
+   **方式 B:使用 Gemini API(需付费)**
+   - ⚠️ 免费配额已取消 | 💵 价格: $0.075-0.30/M tokens
+   - ✅ 优势:原生 PDF 支持,多模态能力最强
+   - 📖 教程请看下方 → [API Key 获取教程](#-api-key-获取教程)
 
 3. **开始使用**！
    - 选择左侧模板类别
@@ -240,22 +231,9 @@ scholarprompt/
 
 #### 为什么这样设计？
 
-1. **🔒 安全性**
-   - 不存储任何用户数据
-   - 所有 API 调用都在您的浏览器中完成
-   - API Key 保存在本地浏览器，永不上传
-
-2. **💰 超低成本**
-   - 项目完全开源免费
-   - 使用 DeepSeek：新用户送 ￥5（约 5000 万 tokens）
-   - 典型使用：生成一篇综述约消耗 ￥0.01-0.05
-   - **每天使用成本 < ￥1**
-   - 使用自己的免费 API 配额
-
-3. **⚡ 灵活性**
-   - 可选择任何兼容的 AI 服务商
-   - 自主控制使用频率和配额
-   - 切换不同模型（DeepSeek/Kimi/GLM/Qwen）
+1. **🔒 安全性**: API Key 保存在本地浏览器，所有调用在您的浏览器中完成，永不上传
+2. **💰 超低成本**: 使用 DeepSeek 新用户送 ￥5（约 5000 万 tokens），每天使用成本 < ￥1
+3. **⚡ 灵活性**: 可选择任何兼容的 AI 服务商，自主控制使用频率
 
 #### API 服务商价格对比（2025年最新）
 
@@ -280,48 +258,78 @@ scholarprompt/
 - 🇨🇳 **国内网络稳定** → **通义千问** / **智谱 GLM**
 - 🌟 **最强能力（付费）** → **Gemini 3 Pro**（多模态最强）
 
-#### 快速获取 API Key
+---
 
-**方法 1：使用 Gemini（推荐，支持 PDF）**
+#### 💡 API Key 获取教程
 
-1. 访问 [Google AI Studio](https://ai.google.dev/aistudio)
-2. 使用 Google 账号登录
-3. 点击左侧 "Get API key"
-4. 点击 "Create API key" 创建新密钥
-5. 复制生成的 API Key（格式：`AIza...`）
-6. 在 ScholarPrompt 设置中：
-   - Base URL 保持默认：`https://generativelanguage.googleapis.com/v1beta`
-   - API Key：粘贴你复制的密钥
-   - Model：选择模型（推荐最新的 `gemini-3-pro-preview`）
-     - **Gemini 3 Pro Preview**: 🌟 最新预览版，强大推理+多模态（推荐！）
-     - **Gemini 2.0 Flash Exp**: 快速版本
-     - **Gemini 2.0 Flash Thinking**: 深度思考推理模式
-     - **Gemini 1.5 Pro**: 稳定版，128K 长上下文
-7. 点击"保存配置"
+##### 🏆 方法 1: DeepSeek (推荐 - 性价比最高)
 
-**方法 2：使用国内服务商（以通义千问为例）**
+**为什么选择 DeepSeek?**
+- 💰 **价格最低**: ￥0.1/M tokens (输入), ￥0.28/M tokens (输出)
+- 🎁 **新用户福利**: 注册即送 ￥5 (可用 100+ 天)
+- ✅ **支持图片/PDF**: 通过 Vision API 上传文件
+- 🧠 **推理能力强**: DeepSeek-V3 模型性能优秀
 
-1. 访问 [阿里云百炼平台](https://bailian.console.aliyun.com)
-2. 注册并登录阿里云账号
-3. 进入"API Key 管理"创建密钥
-4. 在 ScholarPrompt 设置中选择"国内 AI 服务商"：
-   - Base URL：`https://dashscope.aliyuncs.com/compatible-mode/v1`
-   - API Key：你的通义千问 API Key
-   - Model：`qwen-vl-max`（支持图片）或 `qwen-max`（纯文本）
-5. 点击"保存配置"
+**配置步骤:**
 
-**其他国内服务商配置示例：**
+1. **注册账号**
+   - 访问: https://platform.deepseek.com
+   - 点击右上角"注册"
+   - 使用手机号或邮箱注册(支持国内手机号)
+   - 新用户自动获得 ￥5 余额
 
-| 服务商 | Base URL | 模型示例 |
-|--------|----------|----------|
-| 智谱 GLM | `https://open.bigmodel.cn/api/paas/v4` | `glm-4v-plus` (图片), `glm-4-plus` (文本) |
-| Kimi | `https://api.moonshot.cn/v1` | `moonshot-v1-auto` |
-| DeepSeek | `https://api.deepseek.com/v1` | `deepseek-chat` |
+2. **获取 API Key**
+   - 登录后进入"API Keys"页面
+   - 点击"创建 API Key"
+   - 输入名称(如: ScholarPrompt)
+   - 复制生成的密钥(格式: `sk-...`)
 
-⚠️ **重要提示**：
-- Gemini 原生支持 PDF：直接上传，无需转换
-- 国内服务支持图片：需将 PDF 转为 JPG/PNG 后上传
-- API Key 仅保存在您的浏览器本地，不会上传到任何服务器
+3. **在 ScholarPrompt 中配置**
+   - 打开设置 → 展开"国内 AI 服务商"
+   - **服务商**: 选择 DeepSeek
+   - **Base URL**: 自动填充为 `https://api.deepseek.com/v1`
+   - **API Key**: 粘贴你的 `sk-...` 密钥
+   - **Model**: 选择 `deepseek-chat`
+   - 点击"保存配置"
+
+4. **开始使用**
+   - ￥5 额度 ≈ 5000万 tokens
+   - 生成一篇综述约消耗 ￥0.02
+   - 可用 100+ 天(每天重度使用)
+
+---
+
+##### 📄 方法 2: Kimi (原生 PDF 支持)
+
+**适合场景**: 需要直接上传多个 PDF 文献分析
+
+1. 访问: https://platform.moonshot.cn
+2. 注册并获取 API Key
+3. 在设置中选择 Kimi,Base URL 自动填充
+4. 模型选择: `moonshot-v1-auto`
+
+---
+
+##### 🌐 方法 3: Google Gemini (需付费)
+
+**注意**: Gemini 免费额度已取消,需绑定付费账号
+
+1. 访问: https://ai.google.dev/aistudio
+2. 登录 Google 账号并绑定付费信息
+3. 创建 API Key(格式: `AIza...`)
+4. 在设置中选择 Gemini,配置会自动填充
+5. 推荐模型: `gemini-3-pro-preview` 或 `gemini-2.0-flash-exp`
+
+---
+
+**其他国内服务商:**
+
+| 服务商 | 注册地址 | 特点 |
+|--------|---------|------|
+| 智谱 GLM | https://open.bigmodel.cn | 多模态能力强,送￥25 |
+| 通义千问 | https://bailian.console.aliyun.com | 阿里云生态,稳定性好 |
+
+⚠️ **隐私保护**: 所有 API Key 仅保存在浏览器本地,不会上传到任何服务器
 
 ---
 

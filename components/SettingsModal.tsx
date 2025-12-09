@@ -169,9 +169,44 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
                       <p>
                         {lang === 'cn' 
-                          ? '💡 提示: 所有国内服务商都支持图片和 PDF 上传。DeepSeek 性价比最高（￥0.1/M tokens），新用户送 ￥5。'
-                          : '💡 Tip: All domestic providers support image and PDF upload. DeepSeek offers best value (￥0.1/M tokens) with ￥5 bonus.'}
+                          ? '✨ 提示: 选择服务商后 Base URL 会自动填充，无需手动输入。只需粘贴 API Key 即可！'
+                          : '✨ Tip: Base URL auto-fills when you select a provider. Just paste your API Key!'}
                       </p>
+                  </div>
+                  
+                  <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">
+                        {lang === 'cn' ? '选择服务商 (自动填充 Base URL)' : 'Select Provider (Auto-fill Base URL)'}
+                      </label>
+                      <select
+                        value=""
+                        onChange={(e) => {
+                          const selectedProvider = e.target.value;
+                          if (selectedProvider) {
+                            const providerUrls: Record<string, string> = {
+                              'deepseek': 'https://api.deepseek.com/v1',
+                              'kimi': 'https://api.moonshot.cn/v1',
+                              'glm': 'https://open.bigmodel.cn/api/paas/v4',
+                              'qwen': 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+                              'openai': 'https://api.openai.com/v1'
+                            };
+                            setIsGemini(false);
+                            setLocalConfig({
+                              ...localConfig,
+                              provider: 'custom',
+                              baseUrl: providerUrls[selectedProvider]
+                            });
+                          }
+                        }}
+                        className="w-full px-3 py-2 bg-white border border-green-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none font-medium"
+                      >
+                        <option value="">{lang === 'cn' ? '👆 点击选择服务商...' : '👆 Click to select provider...'}</option>
+                        <option value="deepseek">🏆 DeepSeek (￥0.1/M - {lang === 'cn' ? '推荐' : 'Recommended'})</option>
+                        <option value="kimi">📄 Kimi ({lang === 'cn' ? '原生PDF' : 'Native PDF'})</option>
+                        <option value="glm">🤖 {lang === 'cn' ? '智谱 GLM (多模态)' : 'GLM (Multimodal)'}</option>
+                        <option value="qwen">⚡ {lang === 'cn' ? '通义千问 (阿里云)' : 'Qwen (Alibaba)'}</option>
+                        <option value="openai">🌐 OpenAI (GPT-4)</option>
+                      </select>
                   </div>
                   
                   <div>
@@ -188,8 +223,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       />
                       <p className="text-[10px] text-slate-500 mt-1">
                         {lang === 'cn' 
-                          ? 'Kimi: api.moonshot.cn/v1 | DeepSeek: api.deepseek.com/v1 | 智谱: open.bigmodel.cn/api/paas/v4 | 通义: dashscope.aliyuncs.com/compatible-mode/v1' 
-                          : 'Kimi, DeepSeek, GLM, Qwen, OpenAI'}
+                          ? '✅ 已自动填充 (可手动修改)' 
+                          : '✅ Auto-filled (can edit manually)'}
                       </p>
                   </div>
                   <div>
