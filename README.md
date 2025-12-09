@@ -63,11 +63,31 @@
 
 ### 🚀 快速开始
 
-#### 环境要求
+#### ⚡ 在线使用（推荐）
+
+**无需安装，直接使用！**
+
+1. 访问部署地址：
+   - **Vercel 部署版**：https://scholarprompt.vercel.app （推荐）
+   - **GitHub Pages**：https://quzhiii.github.io/Scholar-Prompt
+
+2. 首次使用需配置 API Key：
+   - 点击左下角"设置"图标 ⚙️
+   - 选择 API 提供商：
+     - **Gemini** - 免费，功能完整（支持PDF上传）→ [获取 API Key](https://ai.google.dev/aistudio)
+     - **自定义API** - DeepSeek/Qwen/Kimi 等国内服务
+
+3. 开始使用！选择模板，输入内容，点击"AI 深度运行"
+
+> 💡 **注意**：GitHub Pages 版本需要用户自己配置 API Key。Vercel 版本可以在环境变量中预配置。
+
+#### 🏠 本地运行
+
+**环境要求**
 - Node.js 18+ 
 - 现代浏览器（Chrome / Edge / Safari / Firefox）
 
-#### 本地运行
+**步骤：**
 
 1. **克隆项目**
 ```bash
@@ -82,12 +102,12 @@ npm install
 
 3. **配置API密钥** (可选)
 
-编辑 `.env.local` 文件，添加你的Gemini API Key：
+创建 `.env.local` 文件，添加你的Gemini API Key：
 ```
-GEMINI_API_KEY=your_api_key_here
+VITE_GEMINI_API_KEY=your_api_key_here
 ```
 
-> 💡 如果不配置，应用会提示在设置中使用自定义API。
+> 💡 如果不配置，应用会提示在设置中手动输入 API Key。
 
 4. **启动开发服务器**
 ```bash
@@ -155,8 +175,27 @@ scholarprompt/
 
 ### 📧 联系方式
 
+- **在线演示**: https://scholarprompt.vercel.app
 - **项目主页**: https://github.com/quzhiii/Scholar-Prompt
 - **问题反馈**: [GitHub Issues](https://github.com/quzhiii/Scholar-Prompt/issues)
+
+### 🔑 关于 API Key
+
+**ScholarPrompt 使用客户端 API 调用模式，保护用户隐私和数据安全：**
+
+1. **完全透明** - 所有 API 调用都在您的浏览器中完成
+2. **数据安全** - 您的研究内容不会经过任何第三方服务器
+3. **自主控制** - 使用您自己的 API Key，掌握使用配额
+
+**获取免费 API Key：**
+- **Gemini**: [Google AI Studio](https://ai.google.dev/aistudio) - 免费，每分钟60次请求
+- **DeepSeek**: [DeepSeek 开放平台](https://platform.deepseek.com) - 国内可用
+- **通义千问**: [阿里云百炼](https://bailian.console.aliyun.com/) - 国内可用
+
+> 💡 **为什么不内置 API Key？**
+> 1. 安全性 - 公开的 API Key 会被滥用，导致服务中断
+> 2. 公平性 - 每个用户使用自己的配额，避免资源抢占
+> 3. 灵活性 - 用户可以选择任何兼容的 AI 服务商
 
 ---
 
@@ -205,11 +244,31 @@ Every template follows a structured 6-element design:
 
 ### 🚀 Quick Start
 
-#### Prerequisites
+#### ⚡ Online Usage (Recommended)
+
+**No installation required - Use immediately!**
+
+1. Visit deployment:
+   - **Vercel Deployment**: https://scholarprompt.vercel.app (Recommended)
+   - **GitHub Pages**: https://quzhiii.github.io/Scholar-Prompt
+
+2. First-time setup - Configure API Key:
+   - Click "Settings" icon ⚙️ in the bottom left
+   - Choose API Provider:
+     - **Gemini** - Free, full-featured (PDF upload support) → [Get API Key](https://ai.google.dev/aistudio)
+     - **Custom API** - DeepSeek/Qwen/Kimi and other services
+
+3. Start using! Select a template, enter content, click "Run with Gemini"
+
+> 💡 **Note**: GitHub Pages version requires users to configure their own API Key. Vercel version can have API Key pre-configured in environment variables.
+
+#### 🏠 Local Development
+
+**Prerequisites**
 - Node.js 18+
 - Modern browser (Chrome / Edge / Safari / Firefox)
 
-#### Local Development
+**Steps:**
 
 1. **Clone Repository**
 ```bash
@@ -224,12 +283,12 @@ npm install
 
 3. **Configure API Key** (Optional)
 
-Edit `.env.local` and add your Gemini API Key:
+Create `.env.local` file and add your Gemini API Key:
 ```
-GEMINI_API_KEY=your_api_key_here
+VITE_GEMINI_API_KEY=your_api_key_here
 ```
 
-> 💡 If not configured, the app will prompt you to use Custom API in settings.
+> 💡 If not configured, the app will prompt you to manually enter API Key in Settings.
 
 4. **Start Dev Server**
 ```bash
@@ -297,8 +356,27 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 
 ### 📧 Contact
 
+- **Live Demo**: https://scholarprompt.vercel.app
 - **Project Home**: https://github.com/quzhiii/Scholar-Prompt
 - **Issues**: [GitHub Issues](https://github.com/quzhiii/Scholar-Prompt/issues)
+
+### 🔑 About API Keys
+
+**ScholarPrompt uses client-side API calls to protect user privacy and data security:**
+
+1. **Fully Transparent** - All API calls are made from your browser
+2. **Data Security** - Your research content doesn't pass through any third-party servers
+3. **User Control** - Use your own API Key, manage your own quota
+
+**Get Free API Keys:**
+- **Gemini**: [Google AI Studio](https://ai.google.dev/aistudio) - Free, 60 requests/minute
+- **DeepSeek**: [DeepSeek Platform](https://platform.deepseek.com) - Available in China
+- **Qwen**: [Alibaba Cloud Bailian](https://bailian.console.aliyun.com/) - Available in China
+
+> 💡 **Why no built-in API Key?**
+> 1. Security - Public API Keys would be abused, causing service disruption
+> 2. Fairness - Each user uses their own quota, avoiding resource contention
+> 3. Flexibility - Users can choose any compatible AI service provider
 
 ---
 
