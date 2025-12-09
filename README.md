@@ -49,7 +49,7 @@
   - DeepSeek (深度求索)
   - Qwen (通义千问)
   - Kimi (月之暗面)
-  - Claude / GPT-4 等
+  - Claude / GPT-5 等
 
 #### 🌍 4. 双语界面与模板
 - 完整的中英文双语支持
