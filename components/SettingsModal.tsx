@@ -14,11 +14,15 @@ interface SettingsModalProps {
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, lang, config, onSave }) => {
   const [localConfig, setLocalConfig] = useState<ApiConfig>(config);
+  const [isGemini, setIsGemini] = useState<boolean>(
+    config.baseUrl?.includes('generativelanguage') || false
+  );
   const t = SETTINGS_TEXT[lang];
 
   useEffect(() => {
     if (isOpen) {
         setLocalConfig(config);
+        setIsGemini(config.baseUrl?.includes('generativelanguage') || false);
     }
   }, [isOpen, config]);
 
@@ -85,20 +89,23 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         type="text" 
                         value="https://generativelanguage.googleapis.com/v1beta"
                         disabled
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-500"
+                        className="w-full px-3 py-2 bg-gray-100 border border-slate-200 rounded-lg text-xs text-slate-500 cursor-not-allowed"
                       />
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-slate-600 mb-1">API Key</label>
                       <input 
                         type="password" 
-                        value={localConfig.baseUrl?.includes('generativelanguage') ? localConfig.apiKey || '' : ''}
-                        onChange={(e) => setLocalConfig({
-                          provider: 'custom',
-                          baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
-                          apiKey: e.target.value,
-                          modelId: 'gemini-2.0-flash-exp'
-                        })}
+                        value={isGemini ? localConfig.apiKey || '' : ''}
+                        onChange={(e) => {
+                          setIsGemini(true);
+                          setLocalConfig({
+                            provider: 'custom',
+                            baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
+                            apiKey: e.target.value,
+                            modelId: localConfig.modelId || 'gemini-2.0-flash-exp'
+                          });
+                        }}
                         placeholder="AIza..."
                         className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
@@ -109,8 +116,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       </label>
                       <input 
                         type="text" 
-                        value={localConfig.baseUrl?.includes('generativelanguage') ? localConfig.modelId || 'gemini-2.0-flash-exp' : ''}
-                        onChange={(e) => setLocalConfig({...localConfig, modelId: e.target.value})}
+                        value={isGemini ? (localConfig.modelId || 'gemini-2.0-flash-exp') : ''}
+                        onChange={(e) => {
+                          if (isGemini) {
+                            setLocalConfig({...localConfig, modelId: e.target.value});
+                          }
+                        }}
                         placeholder="gemini-2.0-flash-exp"
                         className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
@@ -149,23 +160,30 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       <label className="block text-xs font-bold text-slate-600 mb-1">Base URL</label>
                       <input 
                         type="text" 
-                        value={!localConfig.baseUrl?.includes('generativelanguage') ? localConfig.baseUrl || '' : ''}
-                        onChange={(e) => setLocalConfig({...localConfig, provider: 'custom', baseUrl: e.target.value})}
+                        value={!isGemini ? localConfig.baseUrl || '' : ''}
+                        onChange={(e) => {
+                          setIsGemini(false);
+                          setLocalConfig({...localConfig, provider: 'custom', baseUrl: e.target.value});
+                        }}
                         placeholder="https://api.deepseek.com/v1"
                         className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                       <p className="text-[10px] text-slate-500 mt-1">
                         {lang === 'cn' 
-                          ? '通义: dashscope.aliyuncs.com | 智谱: open.bigmodel.cn | Kimi: api.moonshot.cn | DeepSeek: api.deepseek.com' 
-                          : 'Qwen, GLM, Kimi, DeepSeek, OpenAI'}
+                          ? 'Kimi: api.moonshot.cn/v1 | DeepSeek: api.deepseek.com/v1 | 智谱: open.bigmodel.cn/api/paas/v4 | 通义: dashscope.aliyuncs.com/compatible-mode/v1' 
+                          : 'Kimi, DeepSeek, GLM, Qwen, OpenAI'}
                       </p>
                   </div>
                   <div>
                       <label className="block text-xs font-bold text-slate-600 mb-1">API Key</label>
                       <input 
                         type="password" 
-                        value={!localConfig.baseUrl?.includes('generativelanguage') ? localConfig.apiKey || '' : ''}
-                        onChange={(e) => setLocalConfig({...localConfig, apiKey: e.target.value})}
+                        value={!isGemini ? localConfig.apiKey || '' : ''}
+                        onChange={(e) => {
+                          if (!isGemini) {
+                            setLocalConfig({...localConfig, apiKey: e.target.value});
+                          }
+                        }}
                         placeholder="sk-..."
                         className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
@@ -176,10 +194,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       </label>
                       <input 
                         type="text" 
-                        value={!localConfig.baseUrl?.includes('generativelanguage') ? localConfig.modelId || '' : ''}
-                        onChange={(e) => setLocalConfig({...localConfig, modelId: e.target.value})}
-                        placeholder="deepseek-chat, qwen-max, gpt-4..."
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring:indigo-500 outline-none"
+                        value={!isGemini ? (localConfig.modelId || '') : ''}
+                        onChange={(e) => {
+                          if (!isGemini) {
+                            setLocalConfig({...localConfig, modelId: e.target.value});
+                          }
+                        }}
+                        placeholder="moonshot-v1-auto, deepseek-chat, glm-4v-plus, qwen-vl-max..."
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                   </div>
                 </div>

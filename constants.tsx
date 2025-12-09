@@ -95,28 +95,28 @@ export const SETTINGS_TEXT = {
   en: {
     title: "Model Settings",
     provider: "Provider",
-    gemini: "ScholarPrompt (Gemini)",
+    gemini: "Google Gemini (Recommended)",
     custom: "Custom (OpenAI Compatible)",
-    customDesc: "Support for DeepSeek, Qwen, Moonshot (Kimi), or standard OpenAI.",
+    customDesc: "Support for Kimi, DeepSeek, GLM, Qwen and all OpenAI-compatible services.",
     baseUrl: "Base URL",
     apiKey: "API Key",
     model: "Model Name",
     save: "Save Configuration",
     cancel: "Cancel",
-    warning: "Note: File uploads are currently only supported with the native Gemini provider. Custom providers will only receive the text prompt."
+    warning: "💡 Tip: All providers support image and PDF uploads. Gemini and Kimi have native PDF support, others use Vision API."
   },
   cn: {
     title: "模型设置",
     provider: "服务提供商",
-    gemini: "ScholarPrompt (Gemini 默认)",
+    gemini: "Google Gemini (推荐)",
     custom: "自定义 (OpenAI 兼容接口)",
-    customDesc: "支持 DeepSeek (深度求索)、Qwen (通义千问)、Kimi (月之暗面) 或 OpenAI。",
+    customDesc: "支持 Kimi、DeepSeek、GLM、Qwen 等所有 OpenAI 兼容服务。",
     baseUrl: "接口地址 (Base URL)",
     apiKey: "API Key",
     model: "模型名称 (Model Name)",
     save: "保存配置",
     cancel: "取消",
-    warning: "注意：文件上传功能目前仅支持原生 Gemini 模式。自定义模式下将仅发送文本提示词。"
+    warning: "💡 提示：所有服务商均支持图片和 PDF 文件上传。Gemini 和 Kimi 原生支持 PDF，其他通过 Vision API 自动处理。"
   }
 };
 
