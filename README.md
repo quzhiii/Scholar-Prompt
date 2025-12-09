@@ -259,7 +259,11 @@ scholarprompt/
 6. 在 ScholarPrompt 设置中：
    - Base URL 保持默认：`https://generativelanguage.googleapis.com/v1beta`
    - API Key：粘贴你复制的密钥
-   - Model：`gemini-2.0-flash-exp`（或其他型号）
+   - Model：选择模型（推荐最新的 `gemini-3-pro-preview`）
+     - **Gemini 3 Pro Preview**: 🌟 最新预览版，强大推理+多模态（推荐！）
+     - **Gemini 2.0 Flash Exp**: 快速版本
+     - **Gemini 2.0 Flash Thinking**: 深度思考推理模式
+     - **Gemini 1.5 Pro**: 稳定版，128K 长上下文
 7. 点击"保存配置"
 
 **方法 2：使用国内服务商（以通义千问为例）**

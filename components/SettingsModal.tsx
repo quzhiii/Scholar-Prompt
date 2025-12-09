@@ -114,17 +114,35 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       <label className="block text-xs font-bold text-slate-600 mb-1">
                         {lang === 'cn' ? '模型' : 'Model'}
                       </label>
-                      <input 
-                        type="text" 
+                      <select
                         value={isGemini ? (localConfig.modelId || 'gemini-2.0-flash-exp') : ''}
                         onChange={(e) => {
                           if (isGemini) {
                             setLocalConfig({...localConfig, modelId: e.target.value});
                           }
                         }}
-                        placeholder="gemini-2.0-flash-exp"
                         className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-                      />
+                      >
+                        <optgroup label={lang === 'cn' ? '🌟 Gemini 3 系列（最新预览）' : '🌟 Gemini 3 Series (Latest Preview)'}>
+                          <option value="gemini-3-pro-preview">Gemini 3 Pro Preview (最新！推理+多模态)</option>
+                        </optgroup>
+                        <optgroup label={lang === 'cn' ? '🔥 Gemini 2.0 系列' : '🔥 Gemini 2.0 Series'}>
+                          <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash Exp (快速推荐)</option>
+                          <option value="gemini-2.0-flash-thinking-exp-1219">Gemini 2.0 Flash Thinking (深度思考)</option>
+                          <option value="gemini-exp-1206">Gemini Exp 1206</option>
+                          <option value="gemini-exp-1121">Gemini Exp 1121</option>
+                        </optgroup>
+                        <optgroup label={lang === 'cn' ? '⚡ Gemini 1.5 系列（稳定）' : '⚡ Gemini 1.5 Series (Stable)'}>
+                          <option value="gemini-1.5-pro">Gemini 1.5 Pro (128K上下文)</option>
+                          <option value="gemini-1.5-flash">Gemini 1.5 Flash (快速)</option>
+                          <option value="gemini-1.5-flash-8b">Gemini 1.5 Flash-8B (轻量)</option>
+                        </optgroup>
+                      </select>
+                      <p className="text-[10px] text-slate-500 mt-1">
+                        {lang === 'cn' 
+                          ? '⭐ 最新：Gemini 3 Pro Preview 支持强大推理和多模态能力' 
+                          : '⭐ Latest: Gemini 3 Pro Preview with powerful reasoning and multimodal'}
+                      </p>
                     </div>
                  </div>
               </div>
