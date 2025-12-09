@@ -159,30 +159,18 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       </p>
                       <ul className="space-y-0.5 ml-4 text-xs">
                         <li>• <strong>DeepSeek</strong>: deepseek-chat (🏆 ￥0.1/M + 📄PDF)</li>
-                        <li>• <strong>Kimi</strong>: moonshot-v1-128k (📄原生PDF - 需付费)</li>
                         <li>• <strong>{lang === 'cn' ? '通义千问' : 'Qwen'}</strong>: qwen-vl-max, qwen-vl-plus (📄PDF)</li>
+                        <li>• <strong>Kimi</strong>: moonshot-v1-128k (📄原生PDF - 需付费)</li>
                         <li>• <strong>{lang === 'cn' ? '智谱' : 'GLM'}</strong>: glm-4v-plus (🖼️仅图片❌PDF)</li>
                       </ul>
-                  </div>
-                  
-                  <div className="bg-amber-50 text-amber-900 border border-amber-300 p-3 rounded-lg text-xs flex items-start gap-2">
-                      <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
-                      <div>
-                        <p className="font-bold mb-1">{lang === 'cn' ? '⚠️ CORS 跨域限制说明' : '⚠️ CORS Restriction Notice'}</p>
-                        <p>
-                          {lang === 'cn' 
-                            ? 'DeepSeek 和智谱GLM 在浏览器中有 CORS 跨域限制，无法直接使用。推荐使用 Gemini 或通义千问（无CORS问题）。'
-                            : 'DeepSeek and GLM have CORS restrictions in browsers. Use Gemini or Qwen instead (no CORS issues).'}
-                        </p>
-                      </div>
                   </div>
                   
                   <div className="bg-blue-50 text-blue-800 p-3 rounded-lg text-xs flex items-start gap-2">
                       <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
                       <p>
                         {lang === 'cn' 
-                          ? '📄 PDF支持: Gemini(原生最佳)、通义千问、Kimi(需付费)。DeepSeek/GLM浏览器不可用。'
-                          : '📄 PDF Support: Gemini (native best), Qwen, Kimi (paid). DeepSeek/GLM unavailable in browser.'}
+                          ? '✅ CORS问题已解决！所有服务商现已通过代理支持，可正常使用。'
+                          : '✅ CORS issue solved! All providers now work via proxy.'}
                       </p>
                   </div>
                   

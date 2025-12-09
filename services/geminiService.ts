@@ -92,6 +92,8 @@ const executeWithOpenAICompatible = async (
 ): Promise<string> => {
   // Check if it's GLM API (uses different endpoint structure)
   const isGLM = config.baseUrl?.includes('bigmodel.cn');
+  const isDeepSeek = config.baseUrl?.includes('deepseek.com');
+  const needsProxy = isDeepSeek || isGLM; // DeepSeek 和 GLM 需要代理
   
   // Construct messages for OpenAI compatible endpoint with Vision API support
   const contentParts: any[] = [];
@@ -121,21 +123,45 @@ const executeWithOpenAICompatible = async (
   ];
   
   try {
-    // GLM uses /chat/completions directly under base URL
-    const endpoint = isGLM ? `${config.baseUrl}/chat/completions` : `${config.baseUrl}/chat/completions`;
+    let endpoint: string;
+    let fetchOptions: RequestInit;
+
+    if (needsProxy) {
+      // 使用代理解决 CORS 问题
+      endpoint = '/api/proxy';
+      fetchOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          apiUrl: `${config.baseUrl}/chat/completions`,
+          apiKey: config.apiKey,
+          body: {
+            model: config.modelId || 'gpt-3.5-turbo',
+            messages: messages,
+            temperature: 0.7
+          }
+        })
+      };
+    } else {
+      // 直接调用（Qwen、Kimi、OpenAI 等无 CORS 问题）
+      endpoint = `${config.baseUrl}/chat/completions`;
+      fetchOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${config.apiKey}`
+        },
+        body: JSON.stringify({
+          model: config.modelId || 'gpt-3.5-turbo',
+          messages: messages,
+          temperature: 0.7
+        })
+      };
+    }
     
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${config.apiKey}`
-      },
-      body: JSON.stringify({
-        model: config.modelId || 'gpt-3.5-turbo',
-        messages: messages,
-        temperature: 0.7
-      })
-    });
+    const response = await fetch(endpoint, fetchOptions);
 
     if (!response.ok) {
       const errorText = await response.text();

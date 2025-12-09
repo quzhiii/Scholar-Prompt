@@ -70,6 +70,11 @@
 1. **访问部署地址**：
    - 🌐 **Vercel 部署版**：https://scholarprompt.vercel.app
    - 📦 **GitHub Pages**：https://quzhiii.github.io/Scholar-Prompt
+   
+   > 💡 **国内访问提示**：
+   > - Vercel 在国内可能较慢，推荐使用 GitHub Pages
+   > - 或使用代理/VPN 访问 Vercel 版本
+   > - 也可以选择本地运行（见下方"本地开发运行"）
 
 2. **首次配置 API Key**（仅需一次）：
    
