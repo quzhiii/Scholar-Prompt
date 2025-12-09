@@ -59,7 +59,7 @@ export interface FileAttachment {
 }
 
 export interface ApiConfig {
-  provider: 'gemini' | 'custom';
+  provider: 'custom';
   baseUrl?: string;
   apiKey?: string;
   modelId?: string;

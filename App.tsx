@@ -23,7 +23,16 @@ const App: React.FC = () => {
   // Initialize API Config from localStorage if available
   const [apiConfig, setApiConfig] = useState<ApiConfig>(() => {
      const saved = localStorage.getItem('scholar_api_config');
-     return saved ? JSON.parse(saved) : { provider: 'gemini' };
+     if (saved) {
+       return JSON.parse(saved);
+     }
+     // Default: empty config, user needs to configure
+     return {
+       provider: 'custom',
+       baseUrl: '',
+       apiKey: '',
+       modelId: ''
+     };
   });
 
   const handleSaveConfig = (config: ApiConfig) => {

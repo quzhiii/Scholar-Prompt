@@ -39,74 +39,138 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
 
         <div className="p-6 space-y-5">
            
-           <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">{t.provider}</label>
-              <div className="grid grid-cols-1 gap-2">
-                 <button
-                    onClick={() => setLocalConfig(prev => ({ ...prev, provider: 'gemini' }))}
-                    className={`px-4 py-3 rounded-lg border text-left text-sm font-medium transition-all ${
-                        localConfig.provider === 'gemini' 
-                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700 ring-1 ring-indigo-500' 
-                        : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                    }`}
-                 >
-                    {t.gemini}
-                 </button>
-                 <button
-                    onClick={() => setLocalConfig(prev => ({ ...prev, provider: 'custom' }))}
-                    className={`px-4 py-3 rounded-lg border text-left text-sm font-medium transition-all ${
-                        localConfig.provider === 'custom' 
-                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700 ring-1 ring-indigo-500' 
-                        : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
-                    }`}
-                 >
-                    <div className="flex flex-col">
-                       <span>{t.custom}</span>
-                       <span className="text-[10px] text-slate-400 mt-0.5 font-normal">{t.customDesc}</span>
-                    </div>
-                 </button>
-              </div>
+           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+              <p className="text-blue-900 font-semibold mb-2">
+                {lang === 'cn' ? '🔑 配置您的 API Key' : '🔑 Configure Your API Key'}
+              </p>
+              <p className="text-blue-700 text-xs leading-relaxed">
+                {lang === 'cn' 
+                  ? 'ScholarPrompt 是完全免费的开源工具。您需要使用自己的 API Key 来调用 AI 服务。所有请求都在您的浏览器中完成，数据完全安全。'
+                  : 'ScholarPrompt is a completely free open-source tool. You need to use your own API Key to call AI services. All requests are made from your browser, data is completely secure.'}
+              </p>
            </div>
 
-           {localConfig.provider === 'custom' && (
-             <div className="space-y-4 pt-2 border-t border-slate-100 animate-fade-in-up">
-                <div className="bg-amber-50 text-amber-800 p-3 rounded-lg text-xs flex items-start gap-2">
-                    <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
-                    <p>{t.warning}</p>
-                </div>
+           <div>
+              <label className="block text-sm font-medium text-slate-700 mb-3">
+                {lang === 'cn' ? 'API 服务提供商' : 'API Service Provider'}
+              </label>
+              
+              {/* Gemini API Option */}
+              <div className="mb-3 p-4 border-2 border-indigo-200 rounded-lg bg-indigo-50/50">
+                 <div className="flex items-start gap-3">
+                    <div className="flex-1">
+                       <h3 className="font-bold text-indigo-900 mb-1">
+                         Google Gemini {lang === 'cn' ? '(推荐)' : '(Recommended)'}
+                       </h3>
+                       <p className="text-xs text-indigo-700 mb-2">
+                         {lang === 'cn' 
+                           ? '✅ 支持 PDF 文件上传 | ✅ 免费额度充足 | ✅ 多模态支持'
+                           : '✅ PDF Upload Support | ✅ Generous Free Tier | ✅ Multimodal'}
+                       </p>
+                       <a 
+                         href="https://ai.google.dev/aistudio" 
+                         target="_blank" 
+                         rel="noopener noreferrer"
+                         className="text-xs text-indigo-600 hover:text-indigo-800 underline font-medium"
+                       >
+                         {lang === 'cn' ? '→ 免费获取 Gemini API Key' : '→ Get Free Gemini API Key'}
+                       </a>
+                    </div>
+                 </div>
+                 
+                 <div className="mt-3 space-y-2">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">Base URL</label>
+                      <input 
+                        type="text" 
+                        value="https://generativelanguage.googleapis.com/v1beta"
+                        disabled
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-xs text-slate-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">API Key</label>
+                      <input 
+                        type="password" 
+                        value={localConfig.baseUrl?.includes('generativelanguage') ? localConfig.apiKey || '' : ''}
+                        onChange={(e) => setLocalConfig({
+                          provider: 'custom',
+                          baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
+                          apiKey: e.target.value,
+                          modelId: 'gemini-2.0-flash-exp'
+                        })}
+                        placeholder="AIza..."
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">
+                        {lang === 'cn' ? '模型' : 'Model'}
+                      </label>
+                      <input 
+                        type="text" 
+                        value={localConfig.baseUrl?.includes('generativelanguage') ? localConfig.modelId || 'gemini-2.0-flash-exp' : ''}
+                        onChange={(e) => setLocalConfig({...localConfig, modelId: e.target.value})}
+                        placeholder="gemini-2.0-flash-exp"
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                    </div>
+                 </div>
+              </div>
 
-                <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">{t.baseUrl}</label>
-                    <input 
-                      type="text" 
-                      value={localConfig.baseUrl || ''}
-                      onChange={(e) => setLocalConfig({...localConfig, baseUrl: e.target.value})}
-                      placeholder="https://api.openai.com/v1"
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-                    />
+              {/* Other Providers */}
+              <details className="group">
+                <summary className="cursor-pointer text-sm text-slate-600 hover:text-slate-800 font-medium py-2">
+                  {lang === 'cn' ? '▶ 或使用其他 AI 服务商 (OpenAI 兼容接口)' : '▶ Or Use Other AI Providers (OpenAI Compatible)'}
+                </summary>
+                <div className="mt-3 p-4 border border-slate-200 rounded-lg space-y-3 bg-slate-50">
+                  <div className="bg-amber-50 text-amber-800 p-3 rounded-lg text-xs flex items-start gap-2">
+                      <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
+                      <p>
+                        {lang === 'cn' 
+                          ? '注意: OpenAI 兼容接口目前不支持 PDF 文件上传功能。如需上传文献，请使用 Gemini API。'
+                          : 'Note: OpenAI-compatible APIs currently do not support PDF file upload. Use Gemini API for literature upload.'}
+                      </p>
+                  </div>
+                  
+                  <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">Base URL</label>
+                      <input 
+                        type="text" 
+                        value={!localConfig.baseUrl?.includes('generativelanguage') ? localConfig.baseUrl || '' : ''}
+                        onChange={(e) => setLocalConfig({...localConfig, provider: 'custom', baseUrl: e.target.value})}
+                        placeholder="https://api.deepseek.com/v1"
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                      <p className="text-[10px] text-slate-500 mt-1">
+                        {lang === 'cn' ? '例如: DeepSeek, Qwen, Kimi, OpenAI' : 'e.g., DeepSeek, Qwen, Kimi, OpenAI'}
+                      </p>
+                  </div>
+                  <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">API Key</label>
+                      <input 
+                        type="password" 
+                        value={!localConfig.baseUrl?.includes('generativelanguage') ? localConfig.apiKey || '' : ''}
+                        onChange={(e) => setLocalConfig({...localConfig, apiKey: e.target.value})}
+                        placeholder="sk-..."
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                      />
+                  </div>
+                  <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">
+                        {lang === 'cn' ? '模型名称' : 'Model Name'}
+                      </label>
+                      <input 
+                        type="text" 
+                        value={!localConfig.baseUrl?.includes('generativelanguage') ? localConfig.modelId || '' : ''}
+                        onChange={(e) => setLocalConfig({...localConfig, modelId: e.target.value})}
+                        placeholder="deepseek-chat, qwen-max, gpt-4..."
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring:indigo-500 outline-none"
+                      />
+                  </div>
                 </div>
-                <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">{t.apiKey}</label>
-                    <input 
-                      type="password" 
-                      value={localConfig.apiKey || ''}
-                      onChange={(e) => setLocalConfig({...localConfig, apiKey: e.target.value})}
-                      placeholder="sk-..."
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-                    />
-                </div>
-                <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">{t.model}</label>
-                    <input 
-                      type="text" 
-                      value={localConfig.modelId || ''}
-                      onChange={(e) => setLocalConfig({...localConfig, modelId: e.target.value})}
-                      placeholder="gpt-3.5-turbo, deepseek-chat, qwen-max..."
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
-                    />
-                </div>
-             </div>
-           )}
+              </details>
+           </div>
 
         </div>
 

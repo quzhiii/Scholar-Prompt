@@ -2,64 +2,39 @@
 import { GoogleGenAI } from "@google/genai";
 import { FileAttachment, ApiConfig } from "../types";
 
-// Get API key from Vite environment variable
-const defaultApiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
-
 export const executeGeminiPrompt = async (
   promptText: string, 
   files: FileAttachment[],
   systemInstruction: string | undefined,
-  config: ApiConfig | undefined = { provider: 'gemini' }
+  config: ApiConfig | undefined
 ): Promise<string> => {
   
-  // 1. Custom Provider Handling
-  if (config?.provider === 'custom') {
-    if (!config.apiKey || !config.baseUrl) {
-       throw new Error("Missing API Key or Base URL for custom provider.");
-    }
-    
-    // Construct messages for OpenAI compatible endpoint
-    const messages = [
-       ...(systemInstruction ? [{ role: "system", content: systemInstruction }] : []),
-       { role: "user", content: promptText }
-    ];
-
-    // NOTE: For custom providers, we currently skip file attachments because support varies widely (PDF vs Image etc).
-    // A production app would need complex logic to parse PDFs to text or check for vision capabilities.
-    
-    try {
-      const response = await fetch(`${config.baseUrl}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${config.apiKey}`
-        },
-        body: JSON.stringify({
-          model: config.modelId || 'gpt-3.5-turbo',
-          messages: messages,
-          temperature: 0.7
-        })
-      });
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.error?.message || `API Error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data.choices?.[0]?.message?.content || "No response.";
-    } catch (e: any) {
-      throw new Error(`Custom API Request Failed: ${e.message}`);
-    }
+  // Check if API is configured
+  if (!config || !config.apiKey || !config.baseUrl) {
+    throw new Error("API_KEY_NOT_CONFIGURED");
   }
 
-  // 2. Default Gemini Handling
-  const apiKey = config?.apiKey || defaultApiKey;
-  if (!apiKey) {
-    throw new Error("API_KEY_MISSING");
-  }
+  // Determine if it's Gemini API or OpenAI-compatible API
+  const isGeminiAPI = config.baseUrl.includes('generativelanguage.googleapis.com') || 
+                      config.baseUrl.includes('ai.google.dev');
 
-  const ai = new GoogleGenAI({ apiKey });
+  if (isGeminiAPI) {
+    // Gemini API Handling (supports file uploads)
+    return await executeWithGemini(promptText, files, systemInstruction, config);
+  } else {
+    // OpenAI-compatible API Handling (no file support)
+    return await executeWithOpenAICompatible(promptText, systemInstruction, config);
+  }
+};
+
+// Gemini API implementation
+const executeWithGemini = async (
+  promptText: string,
+  files: FileAttachment[],
+  systemInstruction: string | undefined,
+  config: ApiConfig
+): Promise<string> => {
+  const ai = new GoogleGenAI({ apiKey: config.apiKey! });
   
   try {
     const aiConfig: any = {};
@@ -86,7 +61,7 @@ export const executeGeminiPrompt = async (
     parts.push({ text: promptText });
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: config.modelId || 'gemini-2.0-flash-exp',
       contents: { parts },
       config: aiConfig
     });
@@ -107,3 +82,45 @@ export const executeGeminiPrompt = async (
     throw error;
   }
 };
+
+// OpenAI-compatible API implementation
+const executeWithOpenAICompatible = async (
+  promptText: string,
+  systemInstruction: string | undefined,
+  config: ApiConfig
+): Promise<string> => {
+  // Construct messages for OpenAI compatible endpoint
+  const messages = [
+     ...(systemInstruction ? [{ role: "system", content: systemInstruction }] : []),
+     { role: "user", content: promptText }
+  ];
+
+  // NOTE: File attachments are not supported in OpenAI-compatible mode
+  // Users should use Gemini API if they need PDF upload functionality
+  
+  try {
+    const response = await fetch(`${config.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.apiKey}`
+      },
+      body: JSON.stringify({
+        model: config.modelId || 'gpt-3.5-turbo',
+        messages: messages,
+        temperature: 0.7
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || `API Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || "No response.";
+  } catch (e: any) {
+    throw new Error(`API Request Failed: ${e.message}`);
+  }
+};
+

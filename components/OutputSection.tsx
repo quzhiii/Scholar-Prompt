@@ -88,30 +88,18 @@ export const OutputSection: React.FC<OutputSectionProps> = ({ template, formValu
 
     } catch (err: any) {
       console.error(err);
-      if (err.message === "API_KEY_MISSING") {
+      if (err.message === "API_KEY_NOT_CONFIGURED") {
           setError(lang === 'cn' 
-            ? "API Key 未配置。请先在设置中配置您的 Gemini API Key，或在 Vercel 项目设置中添加 VITE_GEMINI_API_KEY 环境变量。"
-            : "API Key not configured. Please configure your Gemini API Key in Settings, or add VITE_GEMINI_API_KEY environment variable in Vercel project settings.");
+            ? "❌ API Key 未配置\n\n请点击左下角「设置」按钮配置您的 API Key。\n\n推荐使用 Google Gemini API（免费且支持 PDF 上传）\n→ 获取地址: https://ai.google.dev/aistudio"
+            : "❌ API Key Not Configured\n\nPlease click the 'Settings' button in the bottom left to configure your API Key.\n\nWe recommend Google Gemini API (free and supports PDF upload)\n→ Get it at: https://ai.google.dev/aistudio");
       } else if (err.message === "REGION_ERROR") {
           setError(UI_TEXT[lang].errorRegion);
       } else if (err.message === "INVALID_API_KEY") {
           setError(lang === 'cn' 
-            ? "API Key 无效或过期，请检查您的 Gemini API Key 是否正确。"
-            : "Invalid or expired API Key. Please verify your Gemini API Key.");
+            ? "API Key 无效或过期，请检查您的 API Key 是否正确。"
+            : "Invalid or expired API Key. Please verify your API Key.");
       } else if (err.message?.includes('Rpc failed') || err.message?.includes('xhr error') || err.message?.includes('fetch failed')) {
           setError(UI_TEXT[lang].errorNetwork);
-      } else if (err.message?.includes('API Key') && apiConfig.provider === 'gemini') {
-          // Try to open AI Studio key selector if available
-          if (typeof window !== 'undefined' && window.aistudio?.openSelectKey) {
-            try {
-               await window.aistudio.openSelectKey();
-               setError(UI_TEXT[lang].selectKey); 
-            } catch (e) {
-               setError(lang === 'cn' ? "请在设置中配置 API Key" : "Please configure API Key in Settings.");
-            }
-          } else {
-            setError(lang === 'cn' ? "请在设置中配置您的 Gemini API Key" : "Please configure your Gemini API Key in Settings.");
-          }
       } else {
          setError(err.message || "Failed to execute prompt.");
       }
