@@ -153,25 +153,33 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                   {lang === 'cn' ? '▼ 国内 AI 服务商 (🏆 推荐 - 性价比高)' : '▼ Domestic AI Providers (🏆 Recommended - Best Value)'}
                 </summary>
                 <div className="mt-3 p-4 border border-green-200 rounded-lg space-y-3 bg-green-50">
-                  <div className="bg-green-100 border border-green-300 text-green-800 p-3 rounded-lg text-xs">
-                      <p className="font-semibold mb-1">
-                        {lang === 'cn' ? '🏆 推荐配置 (性价比最高):' : '🏆 Recommended (Best Value):'}
+                  <div className="bg-amber-50 border border-amber-300 text-amber-900 p-4 rounded-lg text-sm">
+                      <p className="font-bold mb-2 flex items-center gap-2">
+                        <AlertTriangle size={16} />
+                        {lang === 'cn' ? '⚠️ 重要提示' : '⚠️ Important Notice'}
                       </p>
-                      <ul className="space-y-0.5 ml-4 text-xs">
-                        <li>• <strong>DeepSeek</strong>: deepseek-chat (🏆 ￥0.1/M + 📄PDF)</li>
-                        <li>• <strong>{lang === 'cn' ? '通义千问' : 'Qwen'}</strong>: qwen-vl-max, qwen-vl-plus (📄PDF)</li>
-                        <li>• <strong>Kimi</strong>: moonshot-v1-128k (📄原生PDF - 需付费)</li>
-                        <li>• <strong>{lang === 'cn' ? '智谱' : 'GLM'}</strong>: glm-4v-plus (🖼️仅图片❌PDF)</li>
-                      </ul>
+                      <p className="mb-2">
+                        {lang === 'cn' 
+                          ? '目前国内AI服务商（DeepSeek/Kimi/GLM/Qwen）的API在浏览器环境中存在兼容性问题，可能无法正常使用。'
+                          : 'Domestic AI providers may have compatibility issues in browser environments.'}
+                      </p>
+                      <p className="font-semibold text-amber-800">
+                        {lang === 'cn' 
+                          ? '🏆 强烈推荐使用 Google Gemini - 稳定可靠，原生支持PDF，完全免费（有配额限制）。'
+                          : '🏆 Strongly recommend Google Gemini - stable, reliable, native PDF support, free with quota.'}
+                      </p>
                   </div>
                   
-                  <div className="bg-blue-50 text-blue-800 p-3 rounded-lg text-xs flex items-start gap-2">
-                      <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
-                      <p>
-                        {lang === 'cn' 
-                          ? '✅ CORS问题已解决！所有服务商现已通过代理支持，可正常使用。'
-                          : '✅ CORS issue solved! All providers now work via proxy.'}
+                  <div className="bg-green-100 border border-green-300 text-green-800 p-3 rounded-lg text-xs">
+                      <p className="font-semibold mb-1">
+                        {lang === 'cn' ? '可用模型:' : 'Available Models:'}
                       </p>
+                      <ul className="space-y-0.5 ml-4 text-xs">
+                        <li>• <strong>Qwen</strong>: qwen-vl-max, qwen-vl-plus</li>
+                        <li>• <strong>Kimi</strong>: moonshot-v1-128k, moonshot-v1-32k</li>
+                        <li>• <strong>DeepSeek</strong>: deepseek-chat</li>
+                        <li>• <strong>GLM</strong>: glm-4v-plus</li>
+                      </ul>
                   </div>
                   
                   <div>

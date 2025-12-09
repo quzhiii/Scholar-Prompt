@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 测试工具 - ScholarPrompt</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #333; margin-bottom: 30px; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            font-family: monospace;
+        }
+        button {
+            background: #4f46e5;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #4338ca;
+        }
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        .result.success {
+            background: #d1fae5;
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+        }
+        .result.error {
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+        .result pre {
+            background: rgba(0,0,0,0.05);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .info-box {
+            background: #dbeafe;
+            border: 1px solid #93c5fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 API 配置测试工具</h1>
+        
+        <div class="info-box">
+            <strong>使用说明：</strong>这个工具可以帮您直接测试 API 配置是否正确，查看具体的错误信息。
+        </div>
+
+        <div class="form-group">
+            <label>选择服务商</label>
+            <select id="provider" onchange="updateConfig()">
+                <option value="">-- 选择服务商 --</option>
+                <option value="qwen">通义千问 Qwen</option>
+                <option value="kimi">Kimi (月之暗面)</option>
+                <option value="deepseek">DeepSeek</option>
+                <option value="glm">智谱 GLM</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Base URL</label>
+            <input type="text" id="baseUrl" placeholder="https://api.example.com/v1">
+        </div>
+
+        <div class="form-group">
+            <label>API Key</label>
+            <input type="password" id="apiKey" placeholder="sk-...">
+        </div>
+
+        <div class="form-group">
+            <label>模型名称</label>
+            <input type="text" id="model" placeholder="qwen-vl-max">
+        </div>
+
+        <div class="form-group">
+            <label>测试消息</label>
+            <textarea id="message" placeholder="你好，请介绍一下你自己">你好，请用一句话介绍你自己</textarea>
+        </div>
+
+        <button onclick="testAPI()" id="testBtn">开始测试</button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const configs = {
+            qwen: {
+                baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+                model: 'qwen-vl-max'
+            },
+            kimi: {
+                baseUrl: 'https://api.moonshot.cn/v1',
+                model: 'moonshot-v1-32k'
+            },
+            deepseek: {
+                baseUrl: 'https://api.deepseek.com/v1',
+                model: 'deepseek-chat'
+            },
+            glm: {
+                baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
+                model: 'glm-4v-plus'
+            }
+        };
+
+        function updateConfig() {
+            const provider = document.getElementById('provider').value;
+            if (provider && configs[provider]) {
+                document.getElementById('baseUrl').value = configs[provider].baseUrl;
+                document.getElementById('model').value = configs[provider].model;
+            }
+        }
+
+        async function testAPI() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const model = document.getElementById('model').value;
+            const message = document.getElementById('message').value;
+            const resultDiv = document.getElementById('result');
+            const testBtn = document.getElementById('testBtn');
+
+            if (!baseUrl || !apiKey || !model) {
+                alert('请填写完整配置信息');
+                return;
+            }
+
+            testBtn.disabled = true;
+            testBtn.textContent = '测试中...';
+            resultDiv.style.display = 'none';
+
+            try {
+                console.log('Testing API:', { baseUrl, model });
+
+                const response = await fetch(`${baseUrl}/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [
+                            {
+                                role: 'user',
+                                content: message
+                            }
+                        ],
+                        temperature: 0.7
+                    })
+                });
+
+                const data = await response.json();
+                console.log('API Response:', data);
+
+                if (!response.ok) {
+                    throw new Error(JSON.stringify(data, null, 2));
+                }
+
+                resultDiv.className = 'result success';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <h3>✅ 测试成功！</h3>
+                    <p><strong>响应内容：</strong></p>
+                    <pre>${data.choices?.[0]?.message?.content || 'No content'}</pre>
+                    <p><strong>完整响应：</strong></p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+
+            } catch (error) {
+                console.error('API Error:', error);
+                resultDiv.className = 'result error';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <h3>❌ 测试失败</h3>
+                    <p><strong>错误信息：</strong></p>
+                    <pre>${error.message}</pre>
+                    <p><strong>可能的原因：</strong></p>
+                    <ul>
+                        <li>API Key 不正确或已过期</li>
+                        <li>Base URL 地址错误</li>
+                        <li>模型名称不正确</li>
+                        <li>账户余额不足</li>
+                        <li>CORS 跨域限制（某些服务商）</li>
+                        <li>网络连接问题</li>
+                    </ul>
+                `;
+            } finally {
+                testBtn.disabled = false;
+                testBtn.textContent = '开始测试';
+            }
+        }
+    </script>
+</body>
+</html>
