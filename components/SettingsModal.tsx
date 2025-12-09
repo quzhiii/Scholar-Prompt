@@ -158,10 +158,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         {lang === 'cn' ? '🏆 推荐配置 (性价比最高):' : '🏆 Recommended (Best Value):'}
                       </p>
                       <ul className="space-y-0.5 ml-4">
-                        <li>• <strong>DeepSeek v3</strong>: deepseek-chat (￥0.1/M tokens，送￥5)</li>
-                        <li>• <strong>Kimi R2</strong>: moonshot-v1-auto (原生PDF / Native PDF)</li>
-                        <li>• <strong>{lang === 'cn' ? '智谱' : 'GLM'}</strong>: glm-4v-plus (多模态 / Multimodal)</li>
-                        <li>• <strong>{lang === 'cn' ? '通义千问' : 'Qwen'}</strong>: qwen-vl-max (速度快 / Fast)</li>
+                        <li>• <strong>DeepSeek v3</strong>: deepseek-chat (￥0.1/M - 📄支持PDF)</li>
+                        <li>• <strong>Kimi R2</strong>: moonshot-v1-auto (📄原生PDF - 最佳)</li>
+                        <li>• <strong>{lang === 'cn' ? '智谱' : 'GLM'}</strong>: glm-4v-plus (🖼️仅图片)</li>
+                        <li>• <strong>{lang === 'cn' ? '通义千问' : 'Qwen'}</strong>: qwen-vl-max (📄支持PDF)</li>
                       </ul>
                   </div>
                   
@@ -169,8 +169,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
                       <p>
                         {lang === 'cn' 
-                          ? '✨ 提示: 选择服务商后 Base URL 会自动填充，无需手动输入。只需粘贴 API Key 即可！'
-                          : '✨ Tip: Base URL auto-fills when you select a provider. Just paste your API Key!'}
+                          ? '📄 PDF支持: Kimi(原生最佳)、DeepSeek、通义千问。智谱GLM仅支持图片，不支持PDF。'
+                          : '📄 PDF Support: Kimi (native best), DeepSeek, Qwen. GLM supports images only, not PDF.'}
                       </p>
                   </div>
                   
@@ -203,11 +203,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         className="w-full px-3 py-2 bg-white border border-green-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none font-medium"
                       >
                         <option value="">{lang === 'cn' ? '👆 点击选择服务商...' : '👆 Click to select provider...'}</option>
-                        <option value="deepseek">🏆 DeepSeek (￥0.1/M - {lang === 'cn' ? '推荐' : 'Recommended'})</option>
-                        <option value="kimi">📄 Kimi ({lang === 'cn' ? '原生PDF' : 'Native PDF'})</option>
-                        <option value="glm">🤖 {lang === 'cn' ? '智谱 GLM (多模态)' : 'GLM (Multimodal)'}</option>
-                        <option value="qwen">⚡ {lang === 'cn' ? '通义千问 (阿里云)' : 'Qwen (Alibaba)'}</option>
-                        <option value="openai">🌐 OpenAI (GPT-4)</option>
+                        <option value="deepseek">🏆 DeepSeek (￥0.1/M + 📄PDF)</option>
+                        <option value="kimi">📄 Kimi ({lang === 'cn' ? '原生PDF - 文献分析最佳' : 'Native PDF - Best for papers'})</option>
+                        <option value="glm">🖼️ {lang === 'cn' ? '智谱 GLM (仅图片❌PDF)' : 'GLM (Images only ❌PDF)'}</option>
+                        <option value="qwen">⚡ {lang === 'cn' ? '通义千问 (阿里云 + 📄PDF)' : 'Qwen (Alibaba + 📄PDF)'}</option>
+                        <option value="openai">🌐 OpenAI (GPT-4 + 📄PDF)</option>
                       </select>
                   </div>
                   
