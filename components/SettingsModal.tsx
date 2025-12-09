@@ -158,8 +158,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         {lang === 'cn' ? '🏆 推荐配置 (性价比最高):' : '🏆 Recommended (Best Value):'}
                       </p>
                       <ul className="space-y-0.5 ml-4 text-xs">
-                        <li>• <strong>Kimi</strong>: moonshot-v1-auto (📄原生PDF - 最佳)</li>
-                        <li>• <strong>DeepSeek</strong>: deepseek-chat (￥0.1/M - 📄PDF)</li>
+                        <li>• <strong>DeepSeek</strong>: deepseek-chat (🏆 ￥0.1/M + 📄PDF)</li>
+                        <li>• <strong>Kimi</strong>: moonshot-v1-128k (📄原生PDF - 需付费)</li>
                         <li>• <strong>{lang === 'cn' ? '通义千问' : 'Qwen'}</strong>: qwen-vl-max, qwen-vl-plus (📄PDF)</li>
                         <li>• <strong>{lang === 'cn' ? '智谱' : 'GLM'}</strong>: glm-4v-plus (🖼️仅图片❌PDF)</li>
                       </ul>
@@ -184,8 +184,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                           const selectedModel = e.target.value;
                           if (selectedModel) {
                             const modelConfigs: Record<string, {url: string, model: string}> = {
-                              // Kimi - 原生PDF支持
-                              'moonshot-v1-auto': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-auto'},
+                              // Kimi - 原生PDF支持 (注意：需要付费账号才能使用)
                               'moonshot-v1-8k': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-8k'},
                               'moonshot-v1-32k': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-32k'},
                               'moonshot-v1-128k': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-128k'},
@@ -216,11 +215,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       >
                         <option value="">{lang === 'cn' ? '👆 点击选择模型 (自动填充URL)' : '👆 Select model (auto-fill URL)'}</option>
                         
-                        <optgroup label={lang === 'cn' ? "📄 Kimi - 原生PDF支持 (文献分析最佳)" : "📄 Kimi - Native PDF (Best for papers)"}>
-                          <option value="moonshot-v1-auto">moonshot-v1-auto (🏆 {lang === 'cn' ? '推荐-自动选择' : 'Recommended-Auto'})</option>
-                          <option value="moonshot-v1-128k">moonshot-v1-128k (128K {lang === 'cn' ? '超长上下文' : 'Ultra-long'})</option>
-                          <option value="moonshot-v1-32k">moonshot-v1-32k (32K)</option>
-                          <option value="moonshot-v1-8k">moonshot-v1-8k (8K)</option>
+                        <optgroup label={lang === 'cn' ? "📄 Kimi - 原生PDF支持 (需付费)" : "📄 Kimi - Native PDF (Paid)"}>
+                          <option value="moonshot-v1-128k">moonshot-v1-128k (🏆 128K {lang === 'cn' ? '推荐-超长文献' : 'Recommended'})</option>
+                          <option value="moonshot-v1-32k">moonshot-v1-32k (32K {lang === 'cn' ? '标准' : 'Standard'})</option>
+                          <option value="moonshot-v1-8k">moonshot-v1-8k (8K {lang === 'cn' ? '经济' : 'Economy'})</option>
                         </optgroup>
                         
                         <optgroup label={lang === 'cn' ? "💰 DeepSeek - PDF支持 (性价比最高)" : "💰 DeepSeek - PDF Support (Best value)"}>
