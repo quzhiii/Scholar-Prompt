@@ -71,10 +71,19 @@
    - 🌐 **Vercel 部署版**：https://scholarprompt.vercel.app
    - 📦 **GitHub Pages**：https://quzhiii.github.io/Scholar-Prompt
    
-   > 💡 **国内访问提示**：
-   > - Vercel 在国内可能较慢，推荐使用 GitHub Pages
-   > - 或使用代理/VPN 访问 Vercel 版本
-   > - 也可以选择本地运行（见下方"本地开发运行"）
+   > 💡 **国内访问说明**：
+   > 
+   > **问题**：Vercel 和 GitHub Pages 在国内可能访问较慢或无法访问
+   > 
+   > **解决方案（3选1）**：
+   > 1. **使用代理/VPN** - 最简单，访问速度快
+   > 2. **本地运行** - 见下方"本地开发运行"章节，完全离线使用
+   > 3. **自行部署到国内服务器** - 如阿里云/腾讯云静态托管
+   > 
+   > **CORS 跨域说明**：
+   > - ✅ 通义千问、Gemini、Kimi：可直接使用，无跨域问题
+   > - 🔧 DeepSeek、智谱GLM：已内置代理功能，自动解决跨域
+   > - 📝 所有服务商在 Vercel 部署版上都能正常使用
 
 2. **首次配置 API Key**（仅需一次）：
    
@@ -229,6 +238,63 @@ scholarprompt/
 - **在线演示**: https://scholarprompt.vercel.app
 - **项目主页**: https://github.com/quzhiii/Scholar-Prompt
 - **问题反馈**: [GitHub Issues](https://github.com/quzhiii/Scholar-Prompt/issues)
+
+---
+
+### 🌐 国内访问与技术说明
+
+#### 国内访问解决方案
+
+**问题**: Vercel 和 GitHub Pages 在国内可能访问缓慢
+
+**3种解决方案**:
+
+1. **使用代理/VPN** ⭐ 推荐
+   - 最简单快捷
+   - 访问速度最快
+   - 所有功能完整可用
+
+2. **本地运行** 
+   ```bash
+   git clone https://github.com/quzhiii/Scholar-Prompt.git
+   cd Scholar-Prompt
+   npm install
+   npm run dev
+   ```
+   - 完全离线使用
+   - 无需担心网络问题
+   - 适合长期重度使用
+
+3. **自行部署到国内服务器**
+   - 阿里云 OSS 静态托管
+   - 腾讯云 COS 静态网站
+   - 七牛云静态托管
+   - 需要一定技术基础
+
+#### CORS 跨域问题说明
+
+**什么是 CORS？**
+
+CORS (Cross-Origin Resource Sharing) 是浏览器的安全机制。当您的网站 (scholarprompt.vercel.app) 调用其他域名的 API (api.deepseek.com) 时，浏览器会检查 API 服务器是否允许跨域访问。
+
+**ScholarPrompt 的解决方案：**
+
+✅ **已解决！所有服务商现已可用**
+
+- **无需代理**: Gemini、通义千问、Kimi - API 原生支持 CORS
+- **自动代理**: DeepSeek、智谱GLM - 通过 Vercel Serverless 函数自动转发
+- **完全透明**: 用户无需任何额外配置，自动检测并使用代理
+
+**技术实现** (开发者参考):
+```
+浏览器 → Vercel 函数 (/api/proxy) → DeepSeek API
+       ↓ 添加 CORS 头
+     返回结果
+```
+
+代码位置: `api/proxy.ts` 和 `services/geminiService.ts`
+
+---
 
 ### 🔑 关于 API Key 与费用
 
