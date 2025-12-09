@@ -90,6 +90,9 @@ const executeWithOpenAICompatible = async (
   systemInstruction: string | undefined,
   config: ApiConfig
 ): Promise<string> => {
+  // Check if it's GLM API (uses different endpoint structure)
+  const isGLM = config.baseUrl?.includes('bigmodel.cn');
+  
   // Construct messages for OpenAI compatible endpoint with Vision API support
   const contentParts: any[] = [];
   
@@ -118,7 +121,10 @@ const executeWithOpenAICompatible = async (
   ];
   
   try {
-    const response = await fetch(`${config.baseUrl}/chat/completions`, {
+    // GLM uses /chat/completions directly under base URL
+    const endpoint = isGLM ? `${config.baseUrl}/chat/completions` : `${config.baseUrl}/chat/completions`;
+    
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -132,13 +138,20 @@ const executeWithOpenAICompatible = async (
     });
 
     if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err.error?.message || `API Error: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('API Error Response:', errorText);
+      let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+      try {
+        const err = JSON.parse(errorText);
+        errorMessage = err.error?.message || err.message || errorMessage;
+      } catch {}
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
     return data.choices?.[0]?.message?.content || "No response.";
   } catch (e: any) {
+    console.error('API Request Error:', e);
     throw new Error(`API Request Failed: ${e.message}`);
   }
 };

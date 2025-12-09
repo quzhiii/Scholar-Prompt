@@ -183,18 +183,20 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         onChange={(e) => {
                           const selectedProvider = e.target.value;
                           if (selectedProvider) {
-                            const providerUrls: Record<string, string> = {
-                              'deepseek': 'https://api.deepseek.com/v1',
-                              'kimi': 'https://api.moonshot.cn/v1',
-                              'glm': 'https://open.bigmodel.cn/api/paas/v4',
-                              'qwen': 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-                              'openai': 'https://api.openai.com/v1'
+                            const providerUrls: Record<string, {url: string, model: string}> = {
+                              'deepseek': {url: 'https://api.deepseek.com/v1', model: 'deepseek-chat'},
+                              'kimi': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-auto'},
+                              'glm': {url: 'https://open.bigmodel.cn/api/paas/v4', model: 'glm-4v-plus'},
+                              'qwen': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-vl-max'},
+                              'openai': {url: 'https://api.openai.com/v1', model: 'gpt-4o'}
                             };
+                            const provider = providerUrls[selectedProvider];
                             setIsGemini(false);
                             setLocalConfig({
                               ...localConfig,
                               provider: 'custom',
-                              baseUrl: providerUrls[selectedProvider]
+                              baseUrl: provider.url,
+                              modelId: provider.model
                             });
                           }
                         }}
@@ -223,8 +225,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       />
                       <p className="text-[10px] text-slate-500 mt-1">
                         {lang === 'cn' 
-                          ? '✅ 已自动填充 (可手动修改)' 
-                          : '✅ Auto-filled (can edit manually)'}
+                          ? '✅ 已自动填充 URL 和模型名称 (可手动修改)' 
+                          : '✅ URL and model auto-filled (can edit manually)'}
                       </p>
                   </div>
                   <div>
@@ -256,6 +258,11 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         placeholder="moonshot-v1-auto, deepseek-chat, glm-4v-plus, qwen-vl-max..."
                         className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
+                      <p className="text-[10px] text-slate-500 mt-1">
+                        {lang === 'cn' 
+                          ? '✅ 已根据服务商自动填充推荐模型' 
+                          : '✅ Recommended model auto-filled'}
+                      </p>
                   </div>
                 </div>
               </details>
