@@ -19,11 +19,11 @@ export const executeGeminiPrompt = async (
                       config.baseUrl.includes('ai.google.dev');
 
   if (isGeminiAPI) {
-    // Gemini API Handling (supports file uploads)
+    // Gemini API Handling (supports PDF/image uploads via native format)
     return await executeWithGemini(promptText, files, systemInstruction, config);
   } else {
-    // OpenAI-compatible API Handling (no file support)
-    return await executeWithOpenAICompatible(promptText, systemInstruction, config);
+    // OpenAI-compatible API Handling (supports images via Vision API)
+    return await executeWithOpenAICompatible(promptText, files, systemInstruction, config);
   }
 };
 
@@ -83,20 +83,39 @@ const executeWithGemini = async (
   }
 };
 
-// OpenAI-compatible API implementation
+// OpenAI-compatible API implementation (supports Vision API for images)
 const executeWithOpenAICompatible = async (
   promptText: string,
+  files: FileAttachment[],
   systemInstruction: string | undefined,
   config: ApiConfig
 ): Promise<string> => {
-  // Construct messages for OpenAI compatible endpoint
+  // Construct messages for OpenAI compatible endpoint with Vision API support
+  const contentParts: any[] = [];
+  
+  // Add images/PDFs (Vision API format)
+  // Supported by: Gemini (native PDF), Qwen-VL, GLM-4V, Kimi, GPT-4V (images only)
+  if (files && files.length > 0) {
+    files.forEach(file => {
+      contentParts.push({
+        type: "image_url",
+        image_url: {
+          url: `data:${file.mimeType};base64,${file.data}`
+        }
+      });
+    });
+  }
+  
+  // Add text prompt
+  contentParts.push({
+    type: "text",
+    text: promptText
+  });
+
   const messages = [
      ...(systemInstruction ? [{ role: "system", content: systemInstruction }] : []),
-     { role: "user", content: promptText }
+     { role: "user", content: contentParts }
   ];
-
-  // NOTE: File attachments are not supported in OpenAI-compatible mode
-  // Users should use Gemini API if they need PDF upload functionality
   
   try {
     const response = await fetch(`${config.baseUrl}/chat/completions`, {

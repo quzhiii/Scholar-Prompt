@@ -75,10 +75,10 @@
    
    点击左下角 **⚙️ 设置** → 按以下步骤配置：
 
-   **方式 A：使用 Gemini API（推荐）**
+   **方式 A：使用 Gemini API（推荐 - 原生 PDF 支持）**
    - ✅ **完全免费** - 每分钟 60 次请求
-   - ✅ **支持 PDF 上传** - 可上传多达 20 篇文献
-   - ✅ **多模态支持** - 图片、文本、代码
+   - ✅ **原生支持 PDF** - 可直接上传多达 20 篇文献
+   - ✅ **多模态能力强** - 图片、文本、代码、PDF
    
    配置步骤：
    ```
@@ -89,12 +89,18 @@
    5. 点击"保存配置"
    ```
 
-   **方式 B：使用国内 AI 服务**
-   - DeepSeek: https://platform.deepseek.com （价格低，速度快）
-   - 通义千问: https://bailian.console.aliyun.com
-   - Kimi: https://platform.moonshot.cn
+   **方式 B：使用国内 AI 服务（全部支持图片/PDF）**
    
-   ⚠️ 注意：国内服务暂不支持 PDF 上传功能
+   所有服务均支持 OpenAI 兼容 API，通过 Vision 格式上传：
+   - **Kimi R2**: https://platform.moonshot.cn （原生PDF，128K上下文，模型：moonshot-v1-auto）
+   - **DeepSeek v3**: https://platform.deepseek.com （图片+PDF，思考能力强，模型：deepseek-chat）
+   - **智谱 GLM-4V**: https://open.bigmodel.cn （图片+PDF，多模态，模型：glm-4v-plus）
+   - **通义千问 VL**: https://bailian.console.aliyun.com （图片+PDF，速度快，模型：qwen-vl-max）
+   
+   💡 **提示**：
+   - ✅ 所有服务都支持图片（JPG/PNG/WebP）和 PDF 文件上传
+   - ✅ Gemini 和 Kimi 原生支持 PDF 解析
+   - ✅ 其他服务通过 Vision API 自动处理 PDF（转换为图片）
 
 3. **开始使用**！
    - 选择左侧模板类别
@@ -223,12 +229,23 @@ scholarprompt/
 
 #### 获取免费 API Key
 
-| 服务商 | 免费额度 | 特点 | 获取地址 |
-|--------|---------|------|----------|
-| **Google Gemini** | 60次/分钟 | ✅ 支持PDF上传<br>✅ 多模态能力强 | [ai.google.dev/aistudio](https://ai.google.dev/aistudio) |
-| **DeepSeek** | ￥5 免费额度 | ✅ 国内可用<br>✅ 价格便宜 | [platform.deepseek.com](https://platform.deepseek.com) |
-| **通义千问** | 免费试用 | ✅ 国内服务<br>✅ 速度快 | [bailian.console.aliyun.com](https://bailian.console.aliyun.com) |
-| **Kimi** | 免费试用 | ✅ 长文本处理 | [platform.moonshot.cn](https://platform.moonshot.cn) |
+| 服务商 | 免费额度 | 文件上传支持 | 获取地址 |
+|--------|---------|-------------|----------|
+| **Google Gemini** | 60次/分钟 | ✅ PDF + 图片 (原生) | [ai.google.dev/aistudio](https://ai.google.dev/aistudio) |
+| **Kimi R2** | 免费试用 | ✅ PDF + 图片 (原生) | [platform.moonshot.cn](https://platform.moonshot.cn) |
+| **DeepSeek v3** | ￥5 免费额度 | ✅ 图片 + PDF (Vision) | [platform.deepseek.com](https://platform.deepseek.com) |
+| **智谱 GLM-4V** | ￥25 免费额度 | ✅ 图片 + PDF (Vision) | [open.bigmodel.cn](https://open.bigmodel.cn) |
+| **通义千问 VL** | 免费试用 | ✅ 图片 + PDF (Vision) | [bailian.console.aliyun.com](https://bailian.console.aliyun.com) |
+
+**文件支持说明：**
+- 🟢 **原生 PDF**：Gemini、Kimi 直接支持 PDF 文档解析
+- 🟡 **Vision API**：DeepSeek、GLM、Qwen 通过 Vision API 支持图片和 PDF（自动转换）
+- ✅ **全部支持**：所有服务均可上传图片（JPG/PNG/WebP）和 PDF 文件
+
+💡 **推荐配置**：
+- 需要分析 PDF 文献 → **Gemini** 或 **Kimi**（原生支持，效果最好）
+- 需要思考推理能力 → **DeepSeek v3**（reasoner 模式）
+- 国内网络环境 → **Kimi** / **GLM** / **Qwen**（访问稳定）
 
 #### 配置步骤详解
 
@@ -245,20 +262,28 @@ scholarprompt/
    - Model：`gemini-2.0-flash-exp`（或其他型号）
 7. 点击"保存配置"
 
-**方法 2：使用 DeepSeek（国内用户）**
+**方法 2：使用国内服务商（以通义千问为例）**
 
-1. 访问 [DeepSeek 开放平台](https://platform.deepseek.com)
-2. 注册并登录
-3. 进入"API Keys"页面创建密钥
-4. 在 ScholarPrompt 设置中选择"其他 AI 服务商"：
-   - Base URL：`https://api.deepseek.com/v1`
-   - API Key：你的 DeepSeek API Key
-   - Model：`deepseek-chat`
+1. 访问 [阿里云百炼平台](https://bailian.console.aliyun.com)
+2. 注册并登录阿里云账号
+3. 进入"API Key 管理"创建密钥
+4. 在 ScholarPrompt 设置中选择"国内 AI 服务商"：
+   - Base URL：`https://dashscope.aliyuncs.com/compatible-mode/v1`
+   - API Key：你的通义千问 API Key
+   - Model：`qwen-vl-max`（支持图片）或 `qwen-max`（纯文本）
 5. 点击"保存配置"
 
+**其他国内服务商配置示例：**
+
+| 服务商 | Base URL | 模型示例 |
+|--------|----------|----------|
+| 智谱 GLM | `https://open.bigmodel.cn/api/paas/v4` | `glm-4v-plus` (图片), `glm-4-plus` (文本) |
+| Kimi | `https://api.moonshot.cn/v1` | `moonshot-v1-auto` |
+| DeepSeek | `https://api.deepseek.com/v1` | `deepseek-chat` |
+
 ⚠️ **重要提示**：
-- DeepSeek/Qwen 等国内服务暂不支持 PDF 文件上传
-- 如需上传文献分析，请使用 Gemini API
+- Gemini 原生支持 PDF：直接上传，无需转换
+- 国内服务支持图片：需将 PDF 转为 JPG/PNG 后上传
 - API Key 仅保存在您的浏览器本地，不会上传到任何服务器
 
 ---

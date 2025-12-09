@@ -60,12 +60,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                  <div className="flex items-start gap-3">
                     <div className="flex-1">
                        <h3 className="font-bold text-indigo-900 mb-1">
-                         Google Gemini {lang === 'cn' ? '(推荐)' : '(Recommended)'}
+                         Google Gemini {lang === 'cn' ? '(推荐 - PDF支持)' : '(Recommended - PDF Support)'}
                        </h3>
                        <p className="text-xs text-indigo-700 mb-2">
                          {lang === 'cn' 
-                           ? '✅ 支持 PDF 文件上传 | ✅ 免费额度充足 | ✅ 多模态支持'
-                           : '✅ PDF Upload Support | ✅ Generous Free Tier | ✅ Multimodal'}
+                           ? '✅ 原生支持 PDF 文件 | ✅ 免费额度充足 | ✅ 多模态能力强'
+                           : '✅ Native PDF Support | ✅ Generous Free Tier | ✅ Strong Multimodal'}
                        </p>
                        <a 
                          href="https://ai.google.dev/aistudio" 
@@ -121,15 +121,27 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
               {/* Other Providers */}
               <details className="group">
                 <summary className="cursor-pointer text-sm text-slate-600 hover:text-slate-800 font-medium py-2">
-                  {lang === 'cn' ? '▶ 或使用其他 AI 服务商 (OpenAI 兼容接口)' : '▶ Or Use Other AI Providers (OpenAI Compatible)'}
+                  {lang === 'cn' ? '▶ 或使用国内 AI 服务商 (支持图片/PDF上传)' : '▶ Or Use Domestic AI Providers (Image/PDF Upload Support)'}
                 </summary>
                 <div className="mt-3 p-4 border border-slate-200 rounded-lg space-y-3 bg-slate-50">
+                  <div className="bg-blue-50 border border-blue-200 text-blue-800 p-3 rounded-lg text-xs">
+                      <p className="font-semibold mb-1">
+                        {lang === 'cn' ? '🖼️ 支持图片/PDF上传 (OpenAI Vision格式):' : '🖼️ Image/PDF Upload Support (OpenAI Vision Format):'}
+                      </p>
+                      <ul className="space-y-0.5 ml-4">
+                        <li>• <strong>Kimi R2</strong>: moonshot-v1-auto (原生PDF支持 / Native PDF)</li>
+                        <li>• <strong>DeepSeek</strong>: deepseek-chat (图片支持 / Image)</li>
+                        <li>• <strong>{lang === 'cn' ? '智谱' : 'GLM'}</strong>: glm-4v-plus (图片支持 / Image)</li>
+                        <li>• <strong>{lang === 'cn' ? '通义千问' : 'Qwen'}</strong>: qwen-vl-max (图片支持 / Image)</li>
+                      </ul>
+                  </div>
+                  
                   <div className="bg-amber-50 text-amber-800 p-3 rounded-lg text-xs flex items-start gap-2">
                       <AlertTriangle size={14} className="mt-0.5 flex-shrink-0" />
                       <p>
                         {lang === 'cn' 
-                          ? '注意: OpenAI 兼容接口目前不支持 PDF 文件上传功能。如需上传文献，请使用 Gemini API。'
-                          : 'Note: OpenAI-compatible APIs currently do not support PDF file upload. Use Gemini API for literature upload.'}
+                          ? '提示: Gemini 原生支持 PDF。Kimi 通过文件API支持PDF。其他服务商通过 Vision API 支持图片（JPG/PNG/WebP）和 PDF（自动转换）。'
+                          : 'Note: Gemini has native PDF support. Kimi supports PDF via file API. Others support images (JPG/PNG/WebP) and PDF (auto-converted) via Vision API.'}
                       </p>
                   </div>
                   
@@ -143,7 +155,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                       />
                       <p className="text-[10px] text-slate-500 mt-1">
-                        {lang === 'cn' ? '例如: DeepSeek, Qwen, Kimi, OpenAI' : 'e.g., DeepSeek, Qwen, Kimi, OpenAI'}
+                        {lang === 'cn' 
+                          ? '通义: dashscope.aliyuncs.com | 智谱: open.bigmodel.cn | Kimi: api.moonshot.cn | DeepSeek: api.deepseek.com' 
+                          : 'Qwen, GLM, Kimi, DeepSeek, OpenAI'}
                       </p>
                   </div>
                   <div>
