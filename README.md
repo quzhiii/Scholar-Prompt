@@ -75,32 +75,60 @@
    
    点击左下角 **⚙️ 设置** → 按以下步骤配置：
 
-   **方式 A：使用 Gemini API（推荐 - 原生 PDF 支持）**
-   - ✅ **完全免费** - 每分钟 60 次请求
-   - ✅ **原生支持 PDF** - 可直接上传多达 20 篇文献
-   - ✅ **多模态能力强** - 图片、文本、代码、PDF
+   **方式 A：使用国内 AI 服务（🔥 推荐 - 性价比高）**
+   
+   | 服务商 | 免费额度 | 价格（输入/输出） | PDF支持 | 性价比 | 推荐指数 |
+   |--------|---------|------------------|---------|--------|----------|
+   | **DeepSeek v3** ⭐ | ￥5 | ￥0.1/￥0.28 每百万tokens | ✅ | 🌟🌟🌟🌟🌟 | **最推荐** |
+   | **Kimi R2** | 免费试用 | ￥0.1/￥0.1 每百万tokens | ✅ 原生 | 🌟🌟🌟🌟 | 推荐 |
+   | **智谱 GLM-4** | ￥25 | ￥5/￥5 每百万tokens | ✅ | 🌟🌟🌟 | 一般 |
+   | **通义千问** | 免费试用 | ￥0.4/￥1.2 每百万tokens | ✅ | 🌟🌟🌟🌟 | 推荐 |
+
+   **🏆 性价比冠军：DeepSeek v3**
+   - 💰 **价格最低**：输入仅 ￥0.1/百万tokens（比 GPT-4 便宜 100 倍）
+   - 🧠 **思考能力强**：支持深度推理模式
+   - 🎁 **新用户福利**：注册送 ￥5 额度（约 500 万 tokens）
+   - ✅ **支持 PDF 上传**：通过 Vision API
+
+   **快速配置 DeepSeek（推荐）：**
+   ```
+   1. 访问: https://platform.deepseek.com
+   2. 注册账号（赠送 ￥5）
+   3. 创建 API Key
+   4. 在 ScholarPrompt 设置中：
+      - 选择"国内 AI 服务商"
+      - Base URL: https://api.deepseek.com/v1
+      - API Key: 粘贴你的密钥
+      - Model: deepseek-chat
+   5. 点击"保存配置"
+   ```
+
+   **其他服务商配置：**
+   - **Kimi**: https://platform.moonshot.cn （原生PDF支持，128K上下文）
+     - Base URL: `https://api.moonshot.cn/v1`
+     - Model: `moonshot-v1-auto`
+   
+   - **智谱 GLM**: https://open.bigmodel.cn （多模态能力强）
+     - Base URL: `https://open.bigmodel.cn/api/paas/v4`
+     - Model: `glm-4v-plus`
+   
+   - **通义千问**: https://bailian.console.aliyun.com （阿里云生态）
+     - Base URL: `https://dashscope.aliyuncs.com/compatible-mode/v1`
+     - Model: `qwen-vl-max`
+
+   **方式 B：使用 Gemini API（需付费）**
+   - ⚠️ **注意**：Gemini 免费配额已取消，现在需要付费
+   - 💵 **价格**：Gemini 1.5 Flash 约 $0.075/$0.30 每百万tokens
+   - ✅ **优势**：原生 PDF 支持，多模态能力强
    
    配置步骤：
    ```
    1. 访问: https://ai.google.dev/aistudio
-   2. 点击 "Get API Key" 创建免费密钥
-   3. 复制 API Key (格式: AIza...)
-   4. 在 ScholarPrompt 设置中粘贴
-   5. 点击"保存配置"
+   2. 绑定付费账号
+   3. 创建 API Key
+   4. 在 ScholarPrompt 设置中选择 Gemini
+   5. 模型推荐: gemini-3-pro-preview 或 gemini-2.0-flash-exp
    ```
-
-   **方式 B：使用国内 AI 服务（全部支持图片/PDF）**
-   
-   所有服务均支持 OpenAI 兼容 API，通过 Vision 格式上传：
-   - **Kimi R2**: https://platform.moonshot.cn （原生PDF，128K上下文，模型：moonshot-v1-auto）
-   - **DeepSeek v3**: https://platform.deepseek.com （图片+PDF，思考能力强，模型：deepseek-chat）
-   - **智谱 GLM-4V**: https://open.bigmodel.cn （图片+PDF，多模态，模型：glm-4v-plus）
-   - **通义千问 VL**: https://bailian.console.aliyun.com （图片+PDF，速度快，模型：qwen-vl-max）
-   
-   💡 **提示**：
-   - ✅ 所有服务都支持图片（JPG/PNG/WebP）和 PDF 文件上传
-   - ✅ Gemini 和 Kimi 原生支持 PDF 解析
-   - ✅ 其他服务通过 Vision API 自动处理 PDF（转换为图片）
 
 3. **开始使用**！
    - 选择左侧模板类别
@@ -206,7 +234,7 @@ scholarprompt/
 - **项目主页**: https://github.com/quzhiii/Scholar-Prompt
 - **问题反馈**: [GitHub Issues](https://github.com/quzhiii/Scholar-Prompt/issues)
 
-### 🔑 关于 API Key
+### 🔑 关于 API Key 与费用
 
 **ScholarPrompt 是完全免费的开源工具，采用"用户自备 API Key"模式：**
 
@@ -217,37 +245,42 @@ scholarprompt/
    - 所有 API 调用都在您的浏览器中完成
    - API Key 保存在本地浏览器，永不上传
 
-2. **💰 零成本**
+2. **💰 超低成本**
    - 项目完全开源免费
-   - 无需支付订阅费用
+   - 使用 DeepSeek：新用户送 ￥5（约 5000 万 tokens）
+   - 典型使用：生成一篇综述约消耗 ￥0.01-0.05
+   - **每天使用成本 < ￥1**
    - 使用自己的免费 API 配额
 
 3. **⚡ 灵活性**
    - 可选择任何兼容的 AI 服务商
    - 自主控制使用频率和配额
-   - 切换不同模型（如 Gemini/DeepSeek/Qwen）
+   - 切换不同模型（DeepSeek/Kimi/GLM/Qwen）
 
-#### 获取免费 API Key
+#### API 服务商价格对比（2025年最新）
 
-| 服务商 | 免费额度 | 文件上传支持 | 获取地址 |
-|--------|---------|-------------|----------|
-| **Google Gemini** | 60次/分钟 | ✅ PDF + 图片 (原生) | [ai.google.dev/aistudio](https://ai.google.dev/aistudio) |
-| **Kimi R2** | 免费试用 | ✅ PDF + 图片 (原生) | [platform.moonshot.cn](https://platform.moonshot.cn) |
-| **DeepSeek v3** | ￥5 免费额度 | ✅ 图片 + PDF (Vision) | [platform.deepseek.com](https://platform.deepseek.com) |
-| **智谱 GLM-4V** | ￥25 免费额度 | ✅ 图片 + PDF (Vision) | [open.bigmodel.cn](https://open.bigmodel.cn) |
-| **通义千问 VL** | 免费试用 | ✅ 图片 + PDF (Vision) | [bailian.console.aliyun.com](https://bailian.console.aliyun.com) |
+| 服务商 | 注册赠送 | 输入价格 | 输出价格 | PDF支持 | 综合评分 |
+|--------|---------|---------|---------|---------|----------|
+| **DeepSeek v3** 🏆 | ￥5 | ￥0.1/M tokens | ￥0.28/M tokens | ✅ | ⭐⭐⭐⭐⭐ |
+| **Kimi R2** | 试用额度 | ￥0.1/M tokens | ￥0.1/M tokens | ✅ 原生 | ⭐⭐⭐⭐ |
+| **通义千问** | 试用额度 | ￥0.4/M tokens | ￥1.2/M tokens | ✅ | ⭐⭐⭐⭐ |
+| **智谱 GLM-4** | ￥25 | ￥5/M tokens | ￥5/M tokens | ✅ | ⭐⭐⭐ |
+| **Gemini Flash** | 已取消 | $0.075/M tokens | $0.30/M tokens | ✅ 原生 | ⭐⭐⭐ |
 
-**文件支持说明：**
-- 🟢 **原生 PDF**：Gemini、Kimi 直接支持 PDF 文档解析
-- 🟡 **Vision API**：DeepSeek、GLM、Qwen 通过 Vision API 支持图片和 PDF（自动转换）
-- ✅ **全部支持**：所有服务均可上传图片（JPG/PNG/WebP）和 PDF 文件
+**💰 费用估算（以 DeepSeek 为例）：**
+- **文献综述**（3万字）：约 ￥0.02
+- **论文写作**（5千字 × 5次修改）：约 ￥0.05
+- **数据分析**（生成Python代码）：约 ￥0.01
+- **每日重度使用**（20次生成）：约 ￥0.50
+- **￥5 赠送额度可使用 100+ 天**
 
 💡 **推荐配置**：
-- 需要分析 PDF 文献 → **Gemini** 或 **Kimi**（原生支持，效果最好）
-- 需要思考推理能力 → **DeepSeek v3**（reasoner 模式）
-- 国内网络环境 → **Kimi** / **GLM** / **Qwen**（访问稳定）
+- 🏆 **性价比最高** → **DeepSeek v3**（新用户送￥5，价格最低）
+- 📄 **PDF 原生支持** → **Kimi R2**（128K上下文，PDF解析好）
+- 🇨🇳 **国内网络稳定** → **通义千问** / **智谱 GLM**
+- 🌟 **最强能力（付费）** → **Gemini 3 Pro**（多模态最强）
 
-#### 配置步骤详解
+#### 快速获取 API Key
 
 **方法 1：使用 Gemini（推荐，支持 PDF）**
 
