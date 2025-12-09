@@ -1,0 +1,14 @@
+# Deploy Trigger
+
+This file is used to trigger GitHub Actions deployment.
+
+Last update: 2025-12-09
+
+## Deployment URLs
+
+- **Vercel**: https://scholarprompt.vercel.app
+- **GitHub Pages**: https://quzhiii.github.io/Scholar-Prompt/
+
+## Status
+
+✅ Automatic deployment configured
