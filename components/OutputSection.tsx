@@ -88,17 +88,29 @@ export const OutputSection: React.FC<OutputSectionProps> = ({ template, formValu
 
     } catch (err: any) {
       console.error(err);
-      if (err.message === "REGION_ERROR") {
+      if (err.message === "API_KEY_MISSING") {
+          setError(lang === 'cn' 
+            ? "API Key 未配置。请先在设置中配置您的 Gemini API Key，或在 Vercel 项目设置中添加 VITE_GEMINI_API_KEY 环境变量。"
+            : "API Key not configured. Please configure your Gemini API Key in Settings, or add VITE_GEMINI_API_KEY environment variable in Vercel project settings.");
+      } else if (err.message === "REGION_ERROR") {
           setError(UI_TEXT[lang].errorRegion);
+      } else if (err.message === "INVALID_API_KEY") {
+          setError(lang === 'cn' 
+            ? "API Key 无效或过期，请检查您的 Gemini API Key 是否正确。"
+            : "Invalid or expired API Key. Please verify your Gemini API Key.");
       } else if (err.message?.includes('Rpc failed') || err.message?.includes('xhr error') || err.message?.includes('fetch failed')) {
           setError(UI_TEXT[lang].errorNetwork);
       } else if (err.message?.includes('API Key') && apiConfig.provider === 'gemini') {
-          // Only prompt for Gemini key via window.aistudio if using default provider
-          try {
-             await window.aistudio.openSelectKey();
-             setError(UI_TEXT[lang].selectKey); 
-          } catch (e) {
-             setError("API Key selection failed.");
+          // Try to open AI Studio key selector if available
+          if (typeof window !== 'undefined' && window.aistudio?.openSelectKey) {
+            try {
+               await window.aistudio.openSelectKey();
+               setError(UI_TEXT[lang].selectKey); 
+            } catch (e) {
+               setError(lang === 'cn' ? "请在设置中配置 API Key" : "Please configure API Key in Settings.");
+            }
+          } else {
+            setError(lang === 'cn' ? "请在设置中配置您的 Gemini API Key" : "Please configure your Gemini API Key in Settings.");
           }
       } else {
          setError(err.message || "Failed to execute prompt.");

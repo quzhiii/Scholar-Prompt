@@ -2,7 +2,8 @@
 import { GoogleGenAI } from "@google/genai";
 import { FileAttachment, ApiConfig } from "../types";
 
-const defaultApiKey = process.env.API_KEY;
+// Get API key from Vite environment variable
+const defaultApiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
 
 export const executeGeminiPrompt = async (
   promptText: string, 
@@ -55,7 +56,7 @@ export const executeGeminiPrompt = async (
   // 2. Default Gemini Handling
   const apiKey = config?.apiKey || defaultApiKey;
   if (!apiKey) {
-    throw new Error("API Key is missing. Please ensure process.env.API_KEY is set.");
+    throw new Error("API_KEY_MISSING");
   }
 
   const ai = new GoogleGenAI({ apiKey });
@@ -85,7 +86,7 @@ export const executeGeminiPrompt = async (
     parts.push({ text: promptText });
 
     const response = await ai.models.generateContent({
-      model: config?.modelId || 'gemini-2.5-flash',
+      model: 'gemini-2.5-flash',
       contents: { parts },
       config: aiConfig
     });
@@ -97,6 +98,10 @@ export const executeGeminiPrompt = async (
     // Transform specific error codes for better UI handling
     if (error.message?.includes('403') || error.status === 403 || error.message?.includes('Region not supported')) {
         throw new Error("REGION_ERROR");
+    }
+    
+    if (error.message?.includes('UNAUTHENTICATED') || error.message?.includes('API Key') || error.message?.includes('invalid') || error.status === 401) {
+        throw new Error("INVALID_API_KEY");
     }
 
     throw error;
