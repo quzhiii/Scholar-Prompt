@@ -1,0 +1,594 @@
+<div align="center">
+  
+# 🎓 ScholarPrompt
+
+**专业学术科研AI提示词工程工具**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![React](https://img.shields.io/badge/React-19.2-61dafb.svg)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178c6.svg)](https://www.typescriptlang.org/)
+
+[English](#english) | [中文](#中文)
+
+</div>
+
+---
+
+## 中文
+
+### 📖 项目简介
+
+**ScholarPrompt** 是一款专为学术研究人员打造的智能提示词工程工具，基于前沿的 **标准提示词架构** (Standard Prompt Framework)，帮助科研工作者高效利用大语言模型（LLM）完成文献综述、论文写作、数据分析等学术任务。
+
+### ✨ 核心亮点
+
+#### 🎯 1. 专业的学术场景覆盖
+- **文献综述模块**：上传多达20篇PDF文献，自动识别研究空白与矛盾点
+- **选题与架构**：基于FINER标准细化研究问题，生成可验证的假设
+- **论文写作辅助**：将简单要点扩写为Nature/Science风格的高影响力学术段落
+- **润色与修改**：多目标润色（清晰度/字数/正式感/地道表达）
+- **方法与分析**：生成Python数据清洗脚本，推荐研究方法及经典文献
+- **投稿辅助**：生成审稿回复信，外交化回应严厉批评
+
+#### 🏗️ 2. 学术标准提示词架构
+每个模板均采用结构化的六要素提示词设计：
+```
+1. Role (角色定位) - 确立AI的专业身份
+2. Instructions (任务指令) - 明确的任务目标
+3. Context & Constraints (上下文与约束) - 领域知识与边界条件
+4. Reasoning Strategy (推理策略) - 思维链/步骤分解
+5. Input Data (输入数据) - 结构化的用户输入
+6. Output Format (输出格式) - 预定义的返回结构
+```
+
+这种架构确保生成的提示词**清晰、严谨、可复现**，显著提升LLM输出质量。
+
+#### 🔄 3. 多模型支持
+- **Kimi K2 模式**：✅ 原生PDF支持，已测试可用（推荐）
+  - kimi-k2-turbo-preview（最新）
+  - moonshot-v1-128k/32k/8k
+- **Gemini 模式**：备选方案，但需付费
+  - gemini-2.0-flash-exp
+  - gemini-1.5-pro
+
+#### 🌍 4. 双语界面与模板
+- 完整的中英文双语支持
+- 所有提示词模板均提供中英文版本
+- 一键切换语言，无需重新配置
+
+#### 💾 5. 历史记录与复用
+- 自动保存每次生成的提示词和AI响应
+- 本地localStorage存储，保护隐私
+- 支持历史记录查看、复制和再次编辑
+
+### 🚀 快速开始
+
+#### ⚡ 在线使用（推荐）
+
+**打开即用，1分钟配置完成！**
+
+1. **访问部署地址**：
+   - 🌐 **Vercel 部署版**：https://scholarprompt.vercel.app
+   - 📦 **GitHub Pages**：https://quzhiii.github.io/Scholar-Prompt
+   
+   > 💡 **国内访问说明**：
+   > 
+   > **问题**：Vercel 和 GitHub Pages 在国内可能访问较慢或无法访问
+   > 
+   > **解决方案（3选1）**：
+   > 1. **使用代理/VPN** - 最简单，访问速度快
+   > 2. **本地运行** - 见下方"本地开发运行"章节，完全离线使用
+   > 3. **自行部署到国内服务器** - 如阿里云/腾讯云静态托管
+   > 
+   > **CORS 跨域说明**：
+   > - ✅ 通义千问、Gemini、Kimi：可直接使用，无跨域问题
+   > - 🔧 DeepSeek、智谱GLM：已内置代理功能，自动解决跨域
+   > - 📝 所有服务商在 Vercel 部署版上都能正常使用
+
+2. **首次配置 API Key**（仅需一次）：
+   
+   点击左下角 **⚙️ 设置** → 按以下步骤配置：
+
+   **方式 A：使用国内 AI 服务（🔥 推荐 - 性价比高）**
+   
+   | 服务商 | 免费额度 | 价格（输入/输出） | PDF支持 | 性价比 | 推荐指数 |
+   |--------|---------|------------------|---------|--------|----------|
+   | **DeepSeek v3.2** ⭐ | ￥5 | ￥0.1/￥0.28 每百万tokens | ✅ | 🌟🌟🌟🌟🌟 |
+   | **Kimi R2** | 免费试用 | ￥0.1/￥0.1 每百万tokens | ✅ 原生 | 🌟🌟🌟🌟 | 
+   | **智谱 GLM-4.6** | ￥25 | ￥5/￥5 每百万tokens | ✅ | 🌟🌟🌟 | 
+   | **通义千问** | 免费试用 | ￥0.4/￥1.2 每百万tokens | ✅ | 🌟🌟🌟🌟 |
+
+   **🏆 性价比冠军：DeepSeek v3.2**
+   - 💰 **价格最低**：输入仅 ￥0.1/百万tokens（比 GPT-4 便宜 100 倍）
+   - 🧠 **思考能力强**：支持深度推理模式
+   - 🎁 **新用户福利**：注册送 ￥5 额度（约 500 万 tokens）
+   - ✅ **支持 PDF 上传**：通过 Vision API
+
+   **快速配置 DeepSeek（推荐）：**
+   ```
+   1. 访问: https://platform.deepseek.com
+   2. 注册账号（赠送 ￥5）
+   3. 创建 API Key
+   4. 在 ScholarPrompt 设置中：
+      - 选择"国内 AI 服务商"
+      - Base URL: https://api.deepseek.com/v1
+      - API Key: 粘贴你的密钥
+      - Model: deepseek-chat
+   5. 点击"保存配置"
+   ```
+
+   **其他服务商配置：**
+   - **Kimi**: https://platform.moonshot.cn （原生PDF支持，128K上下文）
+     - Base URL: `https://api.moonshot.cn/v1`
+     - Model: `moonshot-v1-auto`
+   
+   - **智谱 GLM**: https://open.bigmodel.cn （多模态能力强）
+     - Base URL: `https://open.bigmodel.cn/api/paas/v4`
+     - Model: `glm-4v-plus`
+   
+   - **通义千问**: https://bailian.console.aliyun.com （阿里云生态）
+     - Base URL: `https://dashscope.aliyuncs.com/compatible-mode/v1`
+     - Model: `qwen-vl-max`
+
+   **方式 B:使用 Gemini API(需付费)**
+   - ⚠️ 免费配额已取消 | 💵 价格: $0.075-0.30/M tokens
+   - ✅ 优势:原生 PDF 支持,多模态能力最强
+   - 📖 教程请看下方 → [API Key 获取教程](#-api-key-获取教程)
+
+3. **开始使用**！
+   - 选择左侧模板类别
+   - 填写表单内容
+   - 点击"AI 深度运行"
+
+> 💡 **配置保存在浏览器本地**，无需每次输入。所有 API 调用都在您的浏览器中完成，数据完全安全。
+
+---
+
+#### 🏠 本地开发运行
+
+**适合开发者进行二次开发或离线使用**
+
+**环境要求：**
+- Node.js 18+ 
+- 现代浏览器
+
+**步骤：**
+
+1. **克隆项目**
+```bash
+git clone https://github.com/quzhiii/Scholar-Prompt.git
+cd Scholar-Prompt
+```
+
+2. **安装依赖**
+```bash
+npm install
+```
+
+3. **启动开发服务器**
+```bash
+npm run dev
+```
+
+应用将在 `http://localhost:3000` 启动。
+
+4. **首次使用时配置 API Key**
+   
+   在浏览器中打开后，点击"设置"按钮配置您的 API Key。
+
+#### 部署到生产环境
+
+```bash
+npm run build
+npm run preview
+```
+
+构建产物在 `dist/` 目录，可部署到任何静态托管服务（Vercel / Netlify / GitHub Pages）。
+
+### 📂 项目结构
+
+```
+scholarprompt/
+├── components/           # React组件
+│   ├── LandingPage.tsx   # 首页
+│   ├── Sidebar.tsx       # 侧边栏导航
+│   ├── PromptBuilder.tsx # 表单构建器
+│   ├── OutputSection.tsx # 输出与运行
+│   ├── History.tsx       # 历史记录
+│   └── SettingsModal.tsx # 设置弹窗
+├── services/             # 服务层
+│   ├── geminiService.ts  # API调用逻辑
+│   └── storageService.ts # 本地存储
+├── constants.tsx         # 模板与多语言配置
+├── types.ts              # TypeScript类型定义
+├── App.tsx               # 主应用组件
+└── index.tsx             # 入口文件
+```
+
+### 🎨 技术栈
+
+- **前端框架**: React 19.2 + TypeScript 5.8
+- **构建工具**: Vite 6.2
+- **UI样式**: Tailwind CSS (via CDN)
+- **图标库**: Lucide React
+- **AI集成**: Google Gemini API / OpenAI Compatible APIs
+- **Markdown渲染**: React-Markdown
+
+### 🤝 贡献指南
+
+欢迎提交Issue和Pull Request！
+
+1. Fork本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启Pull Request
+
+### 📄 开源协议
+
+本项目采用 MIT License 开源。详情请见 [LICENSE](LICENSE) 文件。
+
+### 🙏 致谢
+
+- 感谢 Google Gemini 团队提供强大的多模态AI能力
+- 提示词架构灵感来源于学术界的最佳实践与研究方法论
+
+### 📧 联系方式
+
+- **在线演示**: https://scholarprompt.vercel.app
+- **项目主页**: https://github.com/quzhiii/Scholar-Prompt
+- **问题反馈**: [GitHub Issues](https://github.com/quzhiii/Scholar-Prompt/issues)
+
+---
+
+### 🌐 国内访问与技术说明
+
+#### 国内访问解决方案
+
+**问题**: Vercel 和 GitHub Pages 在国内可能访问缓慢
+
+**3种解决方案**:
+
+1. **使用代理/VPN** ⭐ 推荐
+   - 最简单快捷
+   - 访问速度最快
+   - 所有功能完整可用
+
+2. **本地运行** 
+   ```bash
+   git clone https://github.com/quzhiii/Scholar-Prompt.git
+   cd Scholar-Prompt
+   npm install
+   npm run dev
+   ```
+   - 完全离线使用
+   - 无需担心网络问题
+   - 适合长期重度使用
+
+3. **自行部署到国内服务器**
+   - 阿里云 OSS 静态托管
+   - 腾讯云 COS 静态网站
+   - 七牛云静态托管
+   - 需要一定技术基础
+
+#### CORS 跨域问题说明
+
+**什么是 CORS？**
+
+CORS (Cross-Origin Resource Sharing) 是浏览器的安全机制。当您的网站 (scholarprompt.vercel.app) 调用其他域名的 API (api.deepseek.com) 时，浏览器会检查 API 服务器是否允许跨域访问。
+
+**ScholarPrompt 的解决方案：**
+
+✅ **已解决！所有服务商现已可用**
+
+- **无需代理**: Gemini、通义千问、Kimi - API 原生支持 CORS
+- **自动代理**: DeepSeek、智谱GLM - 通过 Vercel Serverless 函数自动转发
+- **完全透明**: 用户无需任何额外配置，自动检测并使用代理
+
+**技术实现** (开发者参考):
+```
+浏览器 → Vercel 函数 (/api/proxy) → DeepSeek API
+       ↓ 添加 CORS 头
+     返回结果
+```
+
+代码位置: `api/proxy.ts` 和 `services/geminiService.ts`
+
+---
+
+### 🔑 关于 API Key 与费用
+
+**ScholarPrompt 是完全免费的开源工具，采用"用户自备 API Key"模式：**
+
+#### 为什么这样设计？
+
+1. **🔒 安全性**: API Key 保存在本地浏览器，所有调用在您的浏览器中完成，永不上传
+2. **💰 超低成本**: 使用 DeepSeek 新用户送 ￥5（约 5000 万 tokens），每天使用成本 < ￥1
+3. **⚡ 灵活性**: 可选择任何兼容的 AI 服务商，自主控制使用频率
+
+#### API 服务商价格对比（2025年最新）
+
+| 服务商 | 注册赠送 | 输入价格 | 输出价格 | PDF支持 | 综合评分 |
+|--------|---------|---------|---------|---------|----------|
+| **DeepSeek v3** 🏆 | ￥5 | ￥0.1/M tokens | ￥0.28/M tokens | ✅ | ⭐⭐⭐⭐⭐ |
+| **Kimi R2** | 试用额度 | ￥0.1/M tokens | ￥0.1/M tokens | ✅ 原生 | ⭐⭐⭐⭐ |
+| **通义千问** | 试用额度 | ￥0.4/M tokens | ￥1.2/M tokens | ✅ | ⭐⭐⭐⭐ |
+| **智谱 GLM-4** | ￥25 | ￥5/M tokens | ￥5/M tokens | ✅ | ⭐⭐⭐ |
+| **Gemini Flash** | 已取消 | $0.075/M tokens | $0.30/M tokens | ✅ 原生 | ⭐⭐⭐ |
+
+**💰 费用估算（以 DeepSeek 为例）：**
+- **文献综述**（3万字）：约 ￥0.02
+- **论文写作**（5千字 × 5次修改）：约 ￥0.05
+- **数据分析**（生成Python代码）：约 ￥0.01
+- **每日重度使用**（20次生成）：约 ￥0.50
+- **￥5 赠送额度可使用 100+ 天**
+
+💡 **推荐配置**：
+- 🏆 **性价比最高** → **DeepSeek v3**（新用户送￥5，价格最低）
+- 📄 **PDF 原生支持** → **Kimi R2**（128K上下文，PDF解析好）
+- 🇨🇳 **国内网络稳定** → **通义千问** / **智谱 GLM**
+- 🌟 **最强能力（付费）** → **Gemini 3 Pro**（多模态最强）
+
+---
+
+#### 💡 API Key 获取教程
+
+##### 🏆 方法 1: DeepSeek (推荐 - 性价比最高)
+
+**为什么选择 DeepSeek?**
+- 💰 **价格最低**: ￥0.1/M tokens (输入), ￥0.28/M tokens (输出)
+- 🎁 **新用户福利**: 注册即送 ￥5 (可用 100+ 天)
+- ✅ **支持图片/PDF**: 通过 Vision API 上传文件
+- 🧠 **推理能力强**: DeepSeek-V3 模型性能优秀
+
+**配置步骤:**
+
+1. **注册账号**
+   - 访问: https://platform.deepseek.com
+   - 点击右上角"注册"
+   - 使用手机号或邮箱注册(支持国内手机号)
+   - 新用户自动获得 ￥5 余额
+
+2. **获取 API Key**
+   - 登录后进入"API Keys"页面
+   - 点击"创建 API Key"
+   - 输入名称(如: ScholarPrompt)
+   - 复制生成的密钥(格式: `sk-...`)
+
+3. **在 ScholarPrompt 中配置**
+   - 打开设置 → 展开"国内 AI 服务商"
+   - **服务商**: 选择 DeepSeek
+   - **Base URL**: 自动填充为 `https://api.deepseek.com/v1`
+   - **API Key**: 粘贴你的 `sk-...` 密钥
+   - **Model**: 选择 `deepseek-chat`
+   - 点击"保存配置"
+
+4. **开始使用**
+   - ￥5 额度 ≈ 5000万 tokens
+   - 生成一篇综述约消耗 ￥0.02
+   - 可用 100+ 天(每天重度使用)
+
+---
+
+##### 📄 方法 2: Kimi (原生 PDF 支持)
+
+**适合场景**: 需要直接上传多个 PDF 文献分析
+
+1. 访问: https://platform.moonshot.cn
+2. 注册并获取 API Key
+3. 在设置中选择 Kimi,Base URL 自动填充
+4. 模型选择: `moonshot-v1-auto`
+
+---
+
+##### 🌐 方法 3: Google Gemini (需付费)
+
+**注意**: Gemini 免费额度已取消,需绑定付费账号
+
+1. 访问: https://ai.google.dev/aistudio
+2. 登录 Google 账号并绑定付费信息
+3. 创建 API Key(格式: `AIza...`)
+4. 在设置中选择 Gemini,配置会自动填充
+5. 推荐模型: `gemini-3-pro-preview` 或 `gemini-2.0-flash-exp`
+
+---
+
+**其他国内服务商:**
+
+| 服务商 | 注册地址 | 特点 |
+|--------|---------|------|
+| 智谱 GLM | https://open.bigmodel.cn | 多模态能力强,送￥25 |
+| 通义千问 | https://bailian.console.aliyun.com | 阿里云生态,稳定性好 |
+
+⚠️ **隐私保护**: 所有 API Key 仅保存在浏览器本地,不会上传到任何服务器
+
+---
+
+## English
+
+### 📖 About
+
+**ScholarPrompt** is a professional prompt engineering tool designed specifically for academic researchers. Built on the cutting-edge **Standard Prompt Framework**, it helps scholars efficiently leverage Large Language Models (LLMs) for literature review, academic writing, data analysis, and more.
+
+### ✨ Key Highlights
+
+#### 🎯 1. Comprehensive Academic Scenarios
+- **Literature Review**: Upload up to 20 PDF papers for automated research gap identification
+- **Ideation & Structure**: Refine research questions using FINER criteria
+- **Academic Writing**: Expand bullet points into Nature/Science-style prose
+- **Polishing**: Multi-objective optimization (clarity/conciseness/formality/fluency)
+- **Methods & Analysis**: Generate Python data cleaning scripts, recommend methodologies
+- **Submission Support**: Generate diplomatic reviewer rebuttals
+
+#### 🏗️ 2. Standard Prompt Architecture
+Every template follows a structured 6-element design:
+```
+1. Role - Establish AI's professional identity
+2. Instructions - Clear task objectives
+3. Context & Constraints - Domain knowledge and boundaries
+4. Reasoning Strategy - Chain-of-Thought / step decomposition
+5. Input Data - Structured user inputs
+6. Output Format - Predefined return structure
+```
+
+#### 🔄 3. Multi-Model Support
+- **Native Gemini**: Supports file uploads (multi-PDF analysis)
+- **Custom API**: Compatible with OpenAI-format endpoints
+  - DeepSeek, Qwen, Kimi (Moonshot)
+  - Claude, GPT-4, etc.
+
+#### 🌍 4. Bilingual Interface
+- Full English / Chinese support
+- All prompt templates available in both languages
+- One-click language switching
+
+#### 💾 5. History & Reusability
+- Auto-save generated prompts and AI responses
+- Local storage for privacy protection
+- View, copy, and re-edit history
+
+### 🚀 Quick Start
+
+#### ⚡ Online Usage (Recommended)
+
+**No installation required - Use immediately!**
+
+1. Visit deployment:
+   - **Vercel Deployment**: https://scholarprompt.vercel.app (Recommended)
+   - **GitHub Pages**: https://quzhiii.github.io/Scholar-Prompt
+
+2. First-time setup - Configure API Key:
+   - Click "Settings" icon ⚙️ in the bottom left
+   - Choose API Provider:
+     - **Gemini** - Free, full-featured (PDF upload support) → [Get API Key](https://ai.google.dev/aistudio)
+     - **Custom API** - DeepSeek/Qwen/Kimi and other services
+
+3. Start using! Select a template, enter content, click "Run with Gemini"
+
+> 💡 **Note**: GitHub Pages version requires users to configure their own API Key. Vercel version can have API Key pre-configured in environment variables.
+
+#### 🏠 Local Development
+
+**Prerequisites**
+- Node.js 18+
+- Modern browser (Chrome / Edge / Safari / Firefox)
+
+**Steps:**
+
+1. **Clone Repository**
+```bash
+git clone https://github.com/quzhiii/Scholar-Prompt.git
+cd Scholar-Prompt
+```
+
+2. **Install Dependencies**
+```bash
+npm install
+```
+
+3. **Configure API Key** (Optional)
+
+Create `.env.local` file and add your Gemini API Key:
+```
+VITE_GEMINI_API_KEY=your_api_key_here
+```
+
+> 💡 If not configured, the app will prompt you to manually enter API Key in Settings.
+
+4. **Start Dev Server**
+```bash
+npm run dev
+```
+
+App will run on `http://localhost:3000`.
+
+#### Production Build
+
+```bash
+npm run build
+npm run preview
+```
+
+Build output is in `dist/` and can be deployed to any static hosting (Vercel / Netlify / GitHub Pages).
+
+### 📂 Project Structure
+
+```
+scholarprompt/
+├── components/           # React components
+│   ├── LandingPage.tsx   # Landing page
+│   ├── Sidebar.tsx       # Navigation sidebar
+│   ├── PromptBuilder.tsx # Form builder
+│   ├── OutputSection.tsx # Output & execution
+│   ├── History.tsx       # History view
+│   └── SettingsModal.tsx # Settings modal
+├── services/             # Service layer
+│   ├── geminiService.ts  # API integration
+│   └── storageService.ts # Local storage
+├── constants.tsx         # Templates & i18n
+├── types.ts              # TypeScript types
+├── App.tsx               # Main app component
+└── index.tsx             # Entry point
+```
+
+### 🎨 Tech Stack
+
+- **Frontend**: React 19.2 + TypeScript 5.8
+- **Build Tool**: Vite 6.2
+- **Styling**: Tailwind CSS (via CDN)
+- **Icons**: Lucide React
+- **AI Integration**: Google Gemini API / OpenAI Compatible
+- **Markdown**: React-Markdown
+
+### 🤝 Contributing
+
+Issues and Pull Requests are welcome!
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+### 📄 License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+### 🙏 Acknowledgments
+
+- Thanks to Google Gemini team for powerful multimodal AI capabilities
+- Prompt architecture inspired by academic best practices and research methodologies
+
+### 📧 Contact
+
+- **Live Demo**: https://scholarprompt.vercel.app
+- **Project Home**: https://github.com/quzhiii/Scholar-Prompt
+- **Issues**: [GitHub Issues](https://github.com/quzhiii/Scholar-Prompt/issues)
+
+### 🔑 About API Keys
+
+**ScholarPrompt uses client-side API calls to protect user privacy and data security:**
+
+1. **Fully Transparent** - All API calls are made from your browser
+2. **Data Security** - Your research content doesn't pass through any third-party servers
+3. **User Control** - Use your own API Key, manage your own quota
+
+**Get Free API Keys:**
+- **Gemini**: [Google AI Studio](https://ai.google.dev/aistudio) - Free, 60 requests/minute
+- **DeepSeek**: [DeepSeek Platform](https://platform.deepseek.com) - Available in China
+- **Qwen**: [Alibaba Cloud Bailian](https://bailian.console.aliyun.com/) - Available in China
+
+> 💡 **Why no built-in API Key?**
+> 1. Security - Public API Keys would be abused, causing service disruption
+> 2. Fairness - Each user uses their own quota, avoiding resource contention
+> 3. Flexibility - Users can choose any compatible AI service provider
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the Academic Research Community**
+
+⭐ If you find this project helpful, please consider giving it a star!
+
+</div>

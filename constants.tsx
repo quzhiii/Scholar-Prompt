@@ -220,21 +220,21 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
 
       if (lang === 'cn') {
         return buildOxfordPrompt(
-          "资深学术研究员（PhD级别），擅长批判性文献分析。",
-          "分析提供的文献（附件PDF或文本），识别关键的研究空白(Research Gaps)和未解决的问题。",
-          `研究领域：${v.topic}。${fileContext} 必须基于提供的材料进行分析，避免幻觉。语气需严谨、客观、学术化。`,
-          "1. 综合各文献的共同发现。\n2. 识别研究之间的矛盾或辩论。\n3. 找出目前尚未被充分探索的领域。\n4. 基于这些空白提出具体的研究问题。",
+          "资深学术研究员（PhD级别），擅长批判性文献综述与系统性空白分析。",
+          "对提供的文献进行深度批判性分析，采用结构化方法识别研究空白并提出可研究问题。",
+          `研究领域：${v.topic}。${fileContext} 必须严格基于提供的材料，引用具体段落/数据支撑观点。保持学术严谨性，避免主观臆断。`,
+          "分析策略（三步走）：\n第一步：逐篇精读 → 提取各文献的核心贡献、方法局限、未解决问题\n第二步：横向比较 → 识别研究间的共识、矛盾、互补关系\n第三步：空白映射 → 根据理论/方法/实证三维度定位研究缺口，提出SMART研究问题（具体Specific、可测Measurable、可实现Achievable、相关Relevant、有时限Time-bound）",
           inputData,
-          "请输出一份Markdown报告，包含以下部分：\n- **主要发现综述**\n- **存在的矛盾/争议**\n- **已识别的研究空白**\n- **建议的后续研究问题**"
+          "请输出一份结构化的Markdown报告（使用清晰的层级标题、表格、列表）：\n\n## 📄 各文献评析\n### 文献1：[标题]\n- **核心发现**：3-5个要点\n- **方法优势**：\n- **局限与不足**：\n### 文献2：[标题]\n...\n\n## 🔍 综合分析\n### 主要发现综述\n（用简洁段落总结跨文献的共同结论）\n\n### 存在的矛盾/争议\n| 议题 | 观点A（文献X） | 观点B（文献Y） | 证据强度 |\n|------|---------------|---------------|----------|\n\n## 💡 研究空白识别\n### 理论空白\n- 空白1：描述 + 为何重要\n### 方法空白\n- 空白2：...\n### 实证空白\n- 空白3：...\n\n## ✅ 建议研究问题（RQ）\n1. **RQ1**：具体问题描述\n   - 研究意义：\n   - 建议方法：\n   - 预期贡献：\n2. **RQ2**：..."
         );
       }
       return buildOxfordPrompt(
-        "Expert Academic Researcher specializing in critical literature analysis.",
-        "Analyze the provided literature (Attached PDFs or text) to identify critical research gaps and unresolved questions.",
-        `Research Topic: ${v.topic}. ${fileContext} Stick strictly to the provided materials. Maintain a formal, objective academic tone.`,
-        "1. Synthesize common themes.\n2. Identify contradictions or debates.\n3. Locate underexplored areas.\n4. Formulate research questions based on these gaps.",
+        "Expert Academic Researcher (PhD-level) specializing in systematic literature reviews and gap analysis.",
+        "Conduct in-depth critical analysis of provided literature using a structured approach to identify research gaps and formulate researchable questions.",
+        `Research Topic: ${v.topic}. ${fileContext} Base analysis strictly on provided materials with specific citations. Maintain academic rigor and avoid speculation.`,
+        "Three-phase strategy:\nPhase 1: Individual Analysis → Extract core contributions, methodological limitations, unresolved issues from each paper\nPhase 2: Cross-comparison → Identify consensus, contradictions, and complementary findings\nPhase 3: Gap Mapping → Locate voids across theoretical/methodological/empirical dimensions; propose SMART research questions (Specific, Measurable, Achievable, Relevant, Time-bound)",
         inputData,
-        "Markdown report with sections: **Key Themes**, **Contradictions**, **Identified Research Gaps**, **Proposed Research Questions**."
+        "Output a structured Markdown report with clear hierarchy, tables, and lists:\n\n## 📄 Individual Literature Analysis\n### Paper 1: [Title]\n- **Key Findings**: 3-5 bullet points\n- **Methodological Strengths**:\n- **Limitations & Gaps**:\n### Paper 2: [Title]\n...\n\n## 🔍 Synthesis\n### Main Findings Overview\n(Concise paragraph summarizing cross-literature conclusions)\n\n### Contradictions/Debates\n| Issue | View A (Paper X) | View B (Paper Y) | Evidence Strength |\n|-------|-----------------|------------------|-------------------|\n\n## 💡 Research Gaps\n### Theoretical Gaps\n- Gap 1: Description + Why it matters\n### Methodological Gaps\n- Gap 2: ...\n### Empirical Gaps\n- Gap 3: ...\n\n## ✅ Proposed Research Questions (RQ)\n1. **RQ1**: Specific question\n   - Significance:\n   - Suggested Method:\n   - Expected Contribution:\n2. **RQ2**: ..."
       );
     },
     systemInstruction: {
