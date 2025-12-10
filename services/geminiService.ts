@@ -135,14 +135,29 @@ const executeWithKimi = async (
     }
     
     // Step 2: Call chat API with file_ids
-    const messages = [
+    // 注意: file_ids 应该放在 messages 数组的最后一个 user message 中
+    const messages: any[] = [
       ...(systemInstruction ? [{ role: "system", content: systemInstruction }] : []),
       { 
         role: "user", 
-        content: promptText,
-        file_ids: fileIds
+        content: [
+          {
+            type: "file",
+            file_id: fileIds[0]  // Kimi 目前只支持单文件
+          },
+          {
+            type: "text",
+            text: promptText
+          }
+        ]
       }
     ];
+    
+    console.log('Calling Kimi chat API with:', {
+      model: config.modelId,
+      fileIds: fileIds,
+      messageCount: messages.length
+    });
     
     const chatResponse = await fetch(`${config.baseUrl}/chat/completions`, {
       method: 'POST',
