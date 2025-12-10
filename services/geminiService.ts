@@ -17,10 +17,14 @@ export const executeGeminiPrompt = async (
   // Determine if it's Gemini API or OpenAI-compatible API
   const isGeminiAPI = config.baseUrl.includes('generativelanguage.googleapis.com') || 
                       config.baseUrl.includes('ai.google.dev');
+  const isKimiAPI = config.baseUrl.includes('moonshot.cn');
 
   if (isGeminiAPI) {
     // Gemini API Handling (supports PDF/image uploads via native format)
     return await executeWithGemini(promptText, files, systemInstruction, config);
+  } else if (isKimiAPI && files && files.length > 0) {
+    // Kimi API 需要先上传文件再引用
+    return await executeWithKimi(promptText, files, systemInstruction, config);
   } else {
     // OpenAI-compatible API Handling (supports images via Vision API)
     return await executeWithOpenAICompatible(promptText, files, systemInstruction, config);
@@ -80,6 +84,91 @@ const executeWithGemini = async (
     }
 
     throw error;
+  }
+};
+
+// Kimi API implementation (requires file upload first)
+const executeWithKimi = async (
+  promptText: string,
+  files: FileAttachment[],
+  systemInstruction: string | undefined,
+  config: ApiConfig
+): Promise<string> => {
+  try {
+    // Step 1: Upload files to Kimi and get file IDs
+    const fileIds: string[] = [];
+    
+    for (const file of files) {
+      // Convert base64 to Blob
+      const base64Data = file.data;
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: file.mimeType });
+      
+      // Create form data for file upload
+      const formData = new FormData();
+      formData.append('file', blob, file.name || 'document.pdf');
+      formData.append('purpose', 'file-extract');
+      
+      // Upload file to Kimi
+      const uploadResponse = await fetch(`${config.baseUrl}/files`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${config.apiKey}`
+        },
+        body: formData
+      });
+      
+      if (!uploadResponse.ok) {
+        const errorText = await uploadResponse.text();
+        console.error('Kimi File Upload Error:', errorText);
+        throw new Error(`文件上传失败: ${uploadResponse.status} ${errorText}`);
+      }
+      
+      const uploadData = await uploadResponse.json();
+      fileIds.push(uploadData.id);
+      console.log('Kimi file uploaded:', uploadData.id);
+    }
+    
+    // Step 2: Call chat API with file_ids
+    const messages = [
+      ...(systemInstruction ? [{ role: "system", content: systemInstruction }] : []),
+      { 
+        role: "user", 
+        content: promptText,
+        file_ids: fileIds
+      }
+    ];
+    
+    const chatResponse = await fetch(`${config.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.apiKey}`
+      },
+      body: JSON.stringify({
+        model: config.modelId || 'moonshot-v1-32k',
+        messages: messages,
+        temperature: 0.7
+      })
+    });
+    
+    if (!chatResponse.ok) {
+      const errorText = await chatResponse.text();
+      console.error('Kimi Chat API Error:', errorText);
+      throw new Error(`API 调用失败: ${chatResponse.status} ${errorText}`);
+    }
+    
+    const chatData = await chatResponse.json();
+    return chatData.choices?.[0]?.message?.content || "未生成响应";
+    
+  } catch (error: any) {
+    console.error("Kimi API Error:", error);
+    throw new Error(`Kimi API 错误: ${error.message}`);
   }
 };
 
