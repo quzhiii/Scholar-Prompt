@@ -203,8 +203,8 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
         label: { en: 'Upload Literature (PDF)', cn: '上传文献 (PDF)' }, 
         type: 'file', 
         accept: 'application/pdf',
-        maxFiles: 20,
-        placeholder: { en: 'Upload up to 20 PDFs', cn: '最多上传 20 个 PDF 文件' }
+        maxFiles: 10,
+        placeholder: { en: 'Upload up to 10 PDFs (max 100MB each)', cn: '最多上传 10 个 PDF 文件（每个不超过 100MB）' }
       },
       { id: 'summaries', label: { en: 'Or Paste Summaries', cn: '或粘贴文本摘要' }, type: 'textarea', placeholder: { en: 'Paste abstract summaries here if not uploading...', cn: '如果不上传文件，可在此粘贴摘要...' } }
     ],

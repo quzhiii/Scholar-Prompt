@@ -137,7 +137,7 @@ export const OutputSection: React.FC<OutputSectionProps> = ({ template, formValu
               }`}
             >
               {isRunning ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
-              {isRunning ? UI_TEXT[lang].running : UI_TEXT[lang].run}
+              {isRunning ? UI_TEXT[lang].executing : (lang === 'cn' ? 'AI 深度运行' : 'AI Deep Run')}
             </button>
           </div>
         </div>
