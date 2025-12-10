@@ -160,7 +160,14 @@ const executeWithKimi = async (
     
     console.log('🚀 Kimi Chat Request Body:', JSON.stringify(requestBody, null, 2));
     
-    const chatResponse = await fetch(`${config.baseUrl}/chat/completions`, {
+    // 注意：如果 baseUrl 已包含 /v1，则不重复添加
+    const apiUrl = config.baseUrl.endsWith('/v1') 
+      ? `${config.baseUrl}/chat/completions`
+      : `${config.baseUrl}/v1/chat/completions`;
+    
+    console.log('🔗 Kimi Chat API URL:', apiUrl);
+    
+    const chatResponse = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
