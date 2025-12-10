@@ -135,26 +135,34 @@ const executeWithKimi = async (
     }
     
     // Step 2: Call chat API with file_ids
-    // 注意: file_ids 应该放在 messages 数组的最后一个 user message 中
+    // Kimi 支持单次对话最多 10 个文件，每个文件 ≤ 100 MB
+    const contentArray: any[] = [];
+    
+    // 添加所有文件
+    fileIds.forEach(fileId => {
+      contentArray.push({
+        type: "file",
+        file_id: fileId
+      });
+    });
+    
+    // 添加文本提示
+    contentArray.push({
+      type: "text",
+      text: promptText
+    });
+    
     const messages: any[] = [
       ...(systemInstruction ? [{ role: "system", content: systemInstruction }] : []),
       { 
         role: "user", 
-        content: [
-          {
-            type: "file",
-            file_id: fileIds[0]  // Kimi 目前只支持单文件
-          },
-          {
-            type: "text",
-            text: promptText
-          }
-        ]
+        content: contentArray
       }
     ];
     
     console.log('Calling Kimi chat API with:', {
       model: config.modelId,
+      fileCount: fileIds.length,
       fileIds: fileIds,
       messageCount: messages.length
     });
