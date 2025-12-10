@@ -109,10 +109,10 @@ const executeWithKimi = async (
       const byteArray = new Uint8Array(byteNumbers);
       const blob = new Blob([byteArray], { type: file.mimeType });
       
-      // Create form data for file upload
+      // Create form data for file upload (Moonshot API 规范)
       const formData = new FormData();
       formData.append('file', blob, file.name || 'document.pdf');
-      formData.append('purpose', 'file-extract');
+      formData.append('purpose', 'file-extract');  // ← Moonshot 只接受: file-extract, batch, batch_output, lambda
       
       // Upload file to Kimi
       const uploadResponse = await fetch(`${config.baseUrl}/files`, {
@@ -151,18 +151,22 @@ const executeWithKimi = async (
       messageCount: messages.length
     });
     
+    const requestBody = {
+      model: config.modelId || 'moonshot-v1-32k',
+      messages: messages,
+      file_ids: fileIds,  // ← 文件引用放在这里，与 messages 同级
+      temperature: 0.7
+    };
+    
+    console.log('🚀 Kimi Chat Request Body:', JSON.stringify(requestBody, null, 2));
+    
     const chatResponse = await fetch(`${config.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${config.apiKey}`
       },
-      body: JSON.stringify({
-        model: config.modelId || 'moonshot-v1-32k',
-        messages: messages,
-        file_ids: fileIds,  // ← 文件引用放在这里，与 messages 同级
-        temperature: 0.7
-      })
+      body: JSON.stringify(requestBody)
     });
     
     if (!chatResponse.ok) {
