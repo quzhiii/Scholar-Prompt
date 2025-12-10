@@ -166,6 +166,8 @@ const executeWithKimi = async (
       : `${config.baseUrl}/v1/chat/completions`;
     
     console.log('🔗 Kimi Chat API URL:', apiUrl);
+    console.log('📦 Request Body (full):', JSON.stringify(requestBody, null, 2));
+    console.log('📄 file_ids being sent:', requestBody.file_ids);
     
     const chatResponse = await fetch(apiUrl, {
       method: 'POST',
@@ -178,11 +180,22 @@ const executeWithKimi = async (
     
     if (!chatResponse.ok) {
       const errorText = await chatResponse.text();
-      console.error('Kimi Chat API Error:', errorText);
+      console.error('❌ Kimi Chat API Error:', {
+        status: chatResponse.status,
+        statusText: chatResponse.statusText,
+        error: errorText,
+        url: apiUrl,
+        sentFileIds: requestBody.file_ids
+      });
       throw new Error(`API 调用失败: ${chatResponse.status} ${errorText}`);
     }
     
     const chatData = await chatResponse.json();
+    console.log('✅ Kimi Chat Response:', {
+      hasContent: !!chatData.choices?.[0]?.message?.content,
+      model: chatData.model,
+      usage: chatData.usage
+    });
     return chatData.choices?.[0]?.message?.content || "未生成响应";
     
   } catch (error: any) {
