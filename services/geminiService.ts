@@ -135,28 +135,12 @@ const executeWithKimi = async (
     }
     
     // Step 2: Call chat API with file_ids
-    // Kimi 支持单次对话最多 10 个文件，每个文件 ≤ 100 MB
-    const contentArray: any[] = [];
-    
-    // 添加所有文件
-    fileIds.forEach(fileId => {
-      contentArray.push({
-        type: "file",
-        file_id: fileId
-      });
-    });
-    
-    // 添加文本提示
-    contentArray.push({
-      type: "text",
-      text: promptText
-    });
-    
+    // Kimi API 要求：file_ids 与 messages 同级，content 只能是 text 类型
     const messages: any[] = [
       ...(systemInstruction ? [{ role: "system", content: systemInstruction }] : []),
       { 
         role: "user", 
-        content: contentArray
+        content: promptText  // ← 只能是纯文本字符串
       }
     ];
     
@@ -176,6 +160,7 @@ const executeWithKimi = async (
       body: JSON.stringify({
         model: config.modelId || 'moonshot-v1-32k',
         messages: messages,
+        file_ids: fileIds,  // ← 文件引用放在这里，与 messages 同级
         temperature: 0.7
       })
     });
