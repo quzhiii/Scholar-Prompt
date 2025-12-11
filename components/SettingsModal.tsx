@@ -97,7 +97,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       setLocalConfig({
                         provider: 'custom',
                         baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-                        apiKey: '',
+                        apiKey: localConfig.apiKey || '',
                         modelId: 'qwen-plus'
                       });
                     }}
@@ -119,7 +119,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       setLocalConfig({
                         provider: 'custom',
                         baseUrl: 'https://api.moonshot.cn/v1',
-                        apiKey: '',
+                        apiKey: localConfig.apiKey || '',
                         modelId: 'kimi-k2-turbo-preview'
                       });
                     }}
@@ -141,7 +141,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       setLocalConfig({
                         provider: 'custom',
                         baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
-                        apiKey: '',
+                        apiKey: localConfig.apiKey || '',
                         modelId: 'gemini-2.0-flash-exp'
                       });
                     }}
