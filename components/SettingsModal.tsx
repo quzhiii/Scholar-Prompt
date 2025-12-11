@@ -14,15 +14,23 @@ interface SettingsModalProps {
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, lang, config, onSave }) => {
   const [localConfig, setLocalConfig] = useState<ApiConfig>(config);
-  const [isGemini, setIsGemini] = useState<boolean>(
-    config.baseUrl?.includes('generativelanguage') || false
-  );
+  const [selectedProvider, setSelectedProvider] = useState<'gemini' | 'qwen' | 'kimi'>(() => {
+    if (config.baseUrl?.includes('generativelanguage')) return 'gemini';
+    if (config.baseUrl?.includes('dashscope')) return 'qwen';
+    return 'kimi';
+  });
   const t = SETTINGS_TEXT[lang];
 
   useEffect(() => {
     if (isOpen) {
         setLocalConfig(config);
-        setIsGemini(config.baseUrl?.includes('generativelanguage') || false);
+        if (config.baseUrl?.includes('generativelanguage')) {
+          setSelectedProvider('gemini');
+        } else if (config.baseUrl?.includes('dashscope')) {
+          setSelectedProvider('qwen');
+        } else {
+          setSelectedProvider('kimi');
+        }
     }
   }, [isOpen, config]);
 
@@ -54,13 +62,99 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
               </p>
            </div>
 
+           <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
+              <div className="flex items-start gap-2">
+                <AlertTriangle size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-red-900 font-semibold mb-2">
+                    {lang === 'cn' ? '⚠️ API Key 安全提示' : '⚠️ API Key Security Warning'}
+                  </p>
+                  <ul className="text-red-700 text-xs space-y-1 leading-relaxed">
+                    <li>• {lang === 'cn' ? '不要在公共场合打开浏览器开发者工具（F12）' : 'Do not open browser DevTools (F12) in public places'}</li>
+                    <li>• {lang === 'cn' ? '不要截图分享包含 API Key 的设置界面' : 'Do not screenshot or share settings containing API Key'}</li>
+                    <li>• {lang === 'cn' ? '不要将 API Key 泄露给他人或上传到公共平台' : 'Do not expose API Key to others or upload to public platforms'}</li>
+                    <li>• {lang === 'cn' ? '如发现泄露，请立即在服务商平台删除该密钥' : 'If leaked, immediately delete the key from provider platform'}</li>
+                  </ul>
+                </div>
+              </div>
+           </div>
+
            <div>
               <label className="block text-sm font-medium text-slate-700 mb-3">
-                {lang === 'cn' ? 'API 服务提供商' : 'API Service Provider'}
+                {lang === 'cn' ? '🔘 选择 API 服务提供商（只能选择一个）' : '🔘 Choose API Provider (Select One Only)'}
               </label>
               
+              {/* Provider Selection Radio Buttons */}
+              <div className="mb-4 p-3 bg-slate-50 rounded-lg space-y-2">
+                <label className="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded transition">
+                  <input 
+                    type="radio" 
+                    name="provider" 
+                    value="qwen"
+                    checked={selectedProvider === 'qwen'}
+                    onChange={() => {
+                      setSelectedProvider('qwen');
+                      setLocalConfig({
+                        provider: 'custom',
+                        baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+                        apiKey: '',
+                        modelId: 'qwen-plus'
+                      });
+                    }}
+                    className="w-4 h-4 text-purple-600"
+                  />
+                  <span className="font-semibold text-purple-700">
+                    🏆 Qwen {lang === 'cn' ? '(强烈推荐 - 文档理解最佳)' : '(Recommended - Best Docs)'}
+                  </span>
+                </label>
+                
+                <label className="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded transition">
+                  <input 
+                    type="radio" 
+                    name="provider" 
+                    value="kimi"
+                    checked={selectedProvider === 'kimi'}
+                    onChange={() => {
+                      setSelectedProvider('kimi');
+                      setLocalConfig({
+                        provider: 'custom',
+                        baseUrl: 'https://api.moonshot.cn/v1',
+                        apiKey: '',
+                        modelId: 'kimi-k2-turbo-preview'
+                      });
+                    }}
+                    className="w-4 h-4 text-green-600"
+                  />
+                  <span className="font-semibold text-green-700">
+                    ✅ Kimi K2 {lang === 'cn' ? '(备选方案 - 原生PDF)' : '(Alternative - Native PDF)'}
+                  </span>
+                </label>
+                
+                <label className="flex items-center gap-3 cursor-pointer p-2 hover:bg-white rounded transition">
+                  <input 
+                    type="radio" 
+                    name="provider" 
+                    value="gemini"
+                    checked={selectedProvider === 'gemini'}
+                    onChange={() => {
+                      setSelectedProvider('gemini');
+                      setLocalConfig({
+                        provider: 'custom',
+                        baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
+                        apiKey: '',
+                        modelId: 'gemini-2.0-flash-exp'
+                      });
+                    }}
+                    className="w-4 h-4 text-amber-600"
+                  />
+                  <span className="font-semibold text-amber-700">
+                    Google Gemini {lang === 'cn' ? '(需付费 - 多模态最强)' : '(Paid - Best Multimodal)'}
+                  </span>
+                </label>
+              </div>
+              
               {/* Gemini API Option */}
-              <div className="mb-3 p-4 border-2 border-amber-200 rounded-lg bg-amber-50/50">
+              <div className={`mb-3 p-4 border-2 rounded-lg transition ${selectedProvider === 'gemini' ? 'border-amber-300 bg-amber-50/50' : 'border-slate-200 bg-slate-50/30 opacity-50'}`}>
                  <div className="flex items-start gap-3">
                     <div className="flex-1">
                        <h3 className="font-bold text-amber-900 mb-1">
@@ -96,18 +190,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       <label className="block text-xs font-bold text-slate-600 mb-1">API Key</label>
                       <input 
                         type="password" 
-                        value={isGemini ? localConfig.apiKey || '' : ''}
+                        value={selectedProvider === 'gemini' ? localConfig.apiKey || '' : ''}
                         onChange={(e) => {
-                          setIsGemini(true);
-                          setLocalConfig({
-                            provider: 'custom',
-                            baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
-                            apiKey: e.target.value,
-                            modelId: localConfig.modelId || 'gemini-2.0-flash-exp'
-                          });
+                          if (selectedProvider === 'gemini') {
+                            setLocalConfig({...localConfig, apiKey: e.target.value});
+                          }
                         }}
                         placeholder="AIza..."
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                        disabled={selectedProvider !== 'gemini'}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                       />
                     </div>
                     <div>
@@ -115,13 +206,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         {lang === 'cn' ? '模型' : 'Model'}
                       </label>
                       <select
-                        value={isGemini ? (localConfig.modelId || 'gemini-2.0-flash-exp') : ''}
+                        value={selectedProvider === 'gemini' ? (localConfig.modelId || 'gemini-2.0-flash-exp') : ''}
                         onChange={(e) => {
-                          if (isGemini) {
+                          if (selectedProvider === 'gemini') {
                             setLocalConfig({...localConfig, modelId: e.target.value});
                           }
                         }}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                        disabled={selectedProvider !== 'gemini'}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                       >
                         <optgroup label={lang === 'cn' ? '🌟 Gemini 3 系列（最新预览）' : '🌟 Gemini 3 Series (Latest Preview)'}>
                           <option value="gemini-3-pro-preview">Gemini 3 Pro Preview (最新！推理+多模态)</option>
@@ -148,11 +240,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
               </div>
 
               {/* Qwen Provider - NEW RECOMMENDED */}
-              <details className="group" open>
-                <summary className="cursor-pointer text-sm text-slate-600 hover:text-slate-800 font-medium py-2">
-                  {lang === 'cn' ? '▼ Qwen (🏆 强烈推荐 - 文档理解最佳)' : '▼ Qwen (🏆 Highly Recommended - Best Document Understanding)'}
-                </summary>
-                <div className="mt-3 p-4 border border-purple-200 rounded-lg space-y-3 bg-purple-50">
+              <div className={`mb-3 p-4 border-2 rounded-lg transition ${selectedProvider === 'qwen' ? 'border-purple-300 bg-purple-50' : 'border-slate-200 bg-slate-50/30 opacity-50'}`}>
+                <div className="space-y-3">
                   <div className="bg-purple-100 border border-purple-300 text-purple-800 p-3 rounded-lg text-xs">
                       <p className="font-semibold mb-2">
                         {lang === 'cn' ? '✅ Qwen 系列模型（卓越的文档理解能力）' : '✅ Qwen Models (Excellent Document Understanding)'}
@@ -177,14 +266,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         value=""
                         onChange={(e) => {
                           const selectedModel = e.target.value;
-                          if (selectedModel) {
+                          if (selectedModel && selectedProvider === 'qwen') {
                             const modelConfigs: Record<string, {url: string, model: string}> = {
                               'qwen-long': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-long'},
                               'qwen-plus': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-plus'},
                               'qwen-turbo': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-turbo'}
                             };
                             const config = modelConfigs[selectedModel];
-                            setIsGemini(false);
                             setLocalConfig({
                               ...localConfig,
                               provider: 'custom',
@@ -193,7 +281,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                             });
                           }
                         }}
-                        className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none font-medium"
+                        disabled={selectedProvider !== 'qwen'}
+                        className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none font-medium disabled:bg-gray-100 disabled:cursor-not-allowed"
                       >
                         <option value="">{lang === 'cn' ? '👆 点击选择模型 (自动填充URL)' : '👆 Select model (auto-fill URL)'}</option>
                         <option value="qwen-long">qwen-long (🔥 {lang === 'cn' ? '超长文档 1000万tokens' : 'Ultra-long 10M tokens'})</option>
@@ -210,38 +299,50 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                   <label className="block text-xs font-bold text-slate-600 mb-1">Base URL</label>
                   <input
                     type="text"
-                    value={localConfig.baseUrl}
-                    onChange={(e) => setLocalConfig({...localConfig, baseUrl: e.target.value})}
+                    value={selectedProvider === 'qwen' ? localConfig.baseUrl : ''}
+                    onChange={(e) => {
+                      if (selectedProvider === 'qwen') {
+                        setLocalConfig({...localConfig, baseUrl: e.target.value});
+                      }
+                    }}
                     placeholder="https://dashscope.aliyuncs.com/compatible-mode/v1"
-                    className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"
+                    disabled={selectedProvider !== 'qwen'}
+                    className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                   />
 
                   <label className="block text-xs font-bold text-slate-600 mb-1 mt-3">API Key</label>
                   <input
                     type="password"
-                    value={localConfig.apiKey}
-                    onChange={(e) => setLocalConfig({...localConfig, apiKey: e.target.value})}
+                    value={selectedProvider === 'qwen' ? localConfig.apiKey : ''}
+                    onChange={(e) => {
+                      if (selectedProvider === 'qwen') {
+                        setLocalConfig({...localConfig, apiKey: e.target.value});
+                      }
+                    }}
                     placeholder={lang === 'cn' ? '粘贴您的 Qwen API Key' : 'Paste your Qwen API Key'}
-                    className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"
+                    disabled={selectedProvider !== 'qwen'}
+                    className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                   />
 
                   <label className="block text-xs font-bold text-slate-600 mb-1 mt-3">Model</label>
                   <input
                     type="text"
-                    value={localConfig.modelId}
-                    onChange={(e) => setLocalConfig({...localConfig, modelId: e.target.value})}
+                    value={selectedProvider === 'qwen' ? localConfig.modelId : ''}
+                    onChange={(e) => {
+                      if (selectedProvider === 'qwen') {
+                        setLocalConfig({...localConfig, modelId: e.target.value});
+                      }
+                    }}
                     placeholder="qwen-plus"
-                    className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"
+                    disabled={selectedProvider !== 'qwen'}
+                    className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                   />
                 </div>
-              </details>
+              </div>
 
               {/* Kimi K2 Provider */}
-              <details className="group">
-                <summary className="cursor-pointer text-sm text-slate-600 hover:text-slate-800 font-medium py-2">
-                  {lang === 'cn' ? '▼ Kimi (备选方案)' : '▼ Kimi (Alternative)'}
-                </summary>
-                <div className="mt-3 p-4 border border-green-200 rounded-lg space-y-3 bg-green-50">
+              <div className={`mb-3 p-4 border-2 rounded-lg transition ${selectedProvider === 'kimi' ? 'border-green-300 bg-green-50' : 'border-slate-200 bg-slate-50/30 opacity-50'}`}>
+                <div className="space-y-3">
                   <div className="bg-green-100 border border-green-300 text-green-800 p-3 rounded-lg text-xs">
                       <p className="font-semibold mb-2">
                         {lang === 'cn' ? '✅ Kimi K2 系列模型（原生PDF支持，已测试可用）' : '✅ Kimi K2 Models (Native PDF, Tested Working)'}
@@ -268,7 +369,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                         value=""
                         onChange={(e) => {
                           const selectedModel = e.target.value;
-                          if (selectedModel) {
+                          if (selectedModel && selectedProvider === 'kimi') {
                             const modelConfigs: Record<string, {url: string, model: string}> = {
                               'kimi-k2-turbo-preview': {url: 'https://api.moonshot.cn/v1', model: 'kimi-k2-turbo-preview'},
                               'kimi-k2-0905-preview': {url: 'https://api.moonshot.cn/v1', model: 'kimi-k2-0905-preview'},
@@ -277,7 +378,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                               'moonshot-v1-8k': {url: 'https://api.moonshot.cn/v1', model: 'moonshot-v1-8k'}
                             };
                             const config = modelConfigs[selectedModel];
-                            setIsGemini(false);
                             setLocalConfig({
                               ...localConfig,
                               provider: 'custom',
@@ -286,7 +386,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                             });
                           }
                         }}
-                        className="w-full px-3 py-2 bg-white border border-green-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none font-medium"
+                        disabled={selectedProvider !== 'kimi'}
+                        className="w-full px-3 py-2 bg-white border border-green-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none font-medium disabled:bg-gray-100 disabled:cursor-not-allowed"
                       >
                         <option value="">{lang === 'cn' ? '👆 点击选择模型 (自动填充URL)' : '👆 Select model (auto-fill URL)'}</option>
                         
@@ -312,13 +413,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       <label className="block text-xs font-bold text-slate-600 mb-1">Base URL</label>
                       <input 
                         type="text" 
-                        value={!isGemini ? localConfig.baseUrl || '' : ''}
+                        value={selectedProvider === 'kimi' ? localConfig.baseUrl || '' : ''}
                         onChange={(e) => {
-                          setIsGemini(false);
-                          setLocalConfig({...localConfig, provider: 'custom', baseUrl: e.target.value});
+                          if (selectedProvider === 'kimi') {
+                            setLocalConfig({...localConfig, baseUrl: e.target.value});
+                          }
                         }}
                         placeholder="https://api.moonshot.cn/v1"
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                        disabled={selectedProvider !== 'kimi'}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                       />
                   </div>
                   
@@ -326,14 +429,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       <label className="block text-xs font-bold text-slate-600 mb-1">API Key</label>
                       <input 
                         type="password" 
-                        value={!isGemini ? localConfig.apiKey || '' : ''}
+                        value={selectedProvider === 'kimi' ? localConfig.apiKey || '' : ''}
                         onChange={(e) => {
-                          if (!isGemini) {
+                          if (selectedProvider === 'kimi') {
                             setLocalConfig({...localConfig, apiKey: e.target.value});
                           }
                         }}
                         placeholder={lang === 'cn' ? '粘贴您的 Kimi API Key' : 'Paste your Kimi API Key'}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                        disabled={selectedProvider !== 'kimi'}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                       />
                   </div>
                   
@@ -343,14 +447,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       </label>
                       <input 
                         type="text" 
-                        value={!isGemini ? (localConfig.modelId || '') : ''}
+                        value={selectedProvider === 'kimi' ? (localConfig.modelId || '') : ''}
                         onChange={(e) => {
-                          if (!isGemini) {
+                          if (selectedProvider === 'kimi') {
                             setLocalConfig({...localConfig, modelId: e.target.value});
                           }
                         }}
                         placeholder="kimi-k2-turbo-preview, moonshot-v1-128k..."
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+                        disabled={selectedProvider !== 'kimi'}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                       />
                       <p className="text-[10px] text-slate-500 mt-1">
                         {lang === 'cn' 
@@ -359,7 +464,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                       </p>
                   </div>
                 </div>
-              </details>
+              </div>
            </div>
 
         </div>
