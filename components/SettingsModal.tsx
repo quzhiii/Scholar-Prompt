@@ -147,10 +147,99 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, l
                  </div>
               </div>
 
-              {/* Kimi K2 Provider */}
+              {/* Qwen Provider - NEW RECOMMENDED */}
               <details className="group" open>
                 <summary className="cursor-pointer text-sm text-slate-600 hover:text-slate-800 font-medium py-2">
-                  {lang === 'cn' ? '▼ Kimi (🏆 推荐 - 已测试可用)' : '▼ Kimi (🏆 Recommended - Tested Working)'}
+                  {lang === 'cn' ? '▼ Qwen (🏆 强烈推荐 - 文档理解最佳)' : '▼ Qwen (🏆 Highly Recommended - Best Document Understanding)'}
+                </summary>
+                <div className="mt-3 p-4 border border-purple-200 rounded-lg space-y-3 bg-purple-50">
+                  <div className="bg-purple-100 border border-purple-300 text-purple-800 p-3 rounded-lg text-xs">
+                      <p className="font-semibold mb-2">
+                        {lang === 'cn' ? '✅ Qwen 系列模型（卓越的文档理解能力）' : '✅ Qwen Models (Excellent Document Understanding)'}
+                      </p>
+                      <ul className="space-y-0.5 ml-4 text-xs">
+                        <li>• <strong>qwen-long</strong> - {lang === 'cn' ? '超长文档（1000万tokens）' : 'Ultra-long (10M tokens)'}</li>
+                        <li>• <strong>qwen-plus</strong> - {lang === 'cn' ? '综合能力强（推荐）' : 'Comprehensive (Recommended)'}</li>
+                        <li>• <strong>qwen-turbo</strong> - {lang === 'cn' ? '快速响应' : 'Fast Response'}</li>
+                      </ul>
+                      <p className="mt-2 font-semibold text-purple-900">
+                        {lang === 'cn' 
+                          ? '💡 获取API Key: https://dashscope.console.aliyun.com' 
+                          : '💡 Get API Key: https://dashscope.console.aliyun.com'}
+                      </p>
+                  </div>
+                  
+                  <div>
+                      <label className="block text-xs font-bold text-slate-600 mb-1">
+                        {lang === 'cn' ? '📄 选择模型 (自动填充配置)' : '📄 Select Model (Auto-fill Config)'}
+                      </label>
+                      <select
+                        value=""
+                        onChange={(e) => {
+                          const selectedModel = e.target.value;
+                          if (selectedModel) {
+                            const modelConfigs: Record<string, {url: string, model: string}> = {
+                              'qwen-long': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-long'},
+                              'qwen-plus': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-plus'},
+                              'qwen-turbo': {url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', model: 'qwen-turbo'}
+                            };
+                            const config = modelConfigs[selectedModel];
+                            setIsGemini(false);
+                            setLocalConfig({
+                              ...localConfig,
+                              provider: 'custom',
+                              baseUrl: config.url,
+                              modelId: config.model
+                            });
+                          }
+                        }}
+                        className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none font-medium"
+                      >
+                        <option value="">{lang === 'cn' ? '👆 点击选择模型 (自动填充URL)' : '👆 Select model (auto-fill URL)'}</option>
+                        <option value="qwen-long">qwen-long (🔥 {lang === 'cn' ? '超长文档 1000万tokens' : 'Ultra-long 10M tokens'})</option>
+                        <option value="qwen-plus">qwen-plus (⭐ {lang === 'cn' ? '综合推荐' : 'Comprehensive'})</option>
+                        <option value="qwen-turbo">qwen-turbo ({lang === 'cn' ? '快速响应' : 'Fast'})</option>
+                      </select>
+                      <p className="text-[10px] text-slate-500 mt-1">
+                        {lang === 'cn' 
+                          ? '✅ Base URL 已根据模型自动填充 (可手动修改)' 
+                          : '✅ Base URL auto-filled by model (editable)'}
+                      </p>
+                  </div>
+
+                  <label className="block text-xs font-bold text-slate-600 mb-1">Base URL</label>
+                  <input
+                    type="text"
+                    value={localConfig.baseUrl}
+                    onChange={(e) => setLocalConfig({...localConfig, baseUrl: e.target.value})}
+                    placeholder="https://dashscope.aliyuncs.com/compatible-mode/v1"
+                    className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"
+                  />
+
+                  <label className="block text-xs font-bold text-slate-600 mb-1 mt-3">API Key</label>
+                  <input
+                    type="password"
+                    value={localConfig.apiKey}
+                    onChange={(e) => setLocalConfig({...localConfig, apiKey: e.target.value})}
+                    placeholder={lang === 'cn' ? '粘贴您的 Qwen API Key' : 'Paste your Qwen API Key'}
+                    className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"
+                  />
+
+                  <label className="block text-xs font-bold text-slate-600 mb-1 mt-3">Model</label>
+                  <input
+                    type="text"
+                    value={localConfig.modelId}
+                    onChange={(e) => setLocalConfig({...localConfig, modelId: e.target.value})}
+                    placeholder="qwen-plus"
+                    className="w-full px-3 py-2 bg-white border border-purple-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"
+                  />
+                </div>
+              </details>
+
+              {/* Kimi K2 Provider */}
+              <details className="group">
+                <summary className="cursor-pointer text-sm text-slate-600 hover:text-slate-800 font-medium py-2">
+                  {lang === 'cn' ? '▼ Kimi (备选方案)' : '▼ Kimi (Alternative)'}
                 </summary>
                 <div className="mt-3 p-4 border border-green-200 rounded-lg space-y-3 bg-green-50">
                   <div className="bg-green-100 border border-green-300 text-green-800 p-3 rounded-lg text-xs">
