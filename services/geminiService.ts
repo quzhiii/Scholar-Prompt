@@ -18,6 +18,7 @@ export const executeGeminiPrompt = async (
   const isGeminiAPI = config.baseUrl.includes('generativelanguage.googleapis.com') || 
                       config.baseUrl.includes('ai.google.dev');
   const isKimiAPI = config.baseUrl.includes('moonshot.cn');
+  const isQwenAPI = config.baseUrl.includes('aliyuncs.com');
 
   if (isGeminiAPI) {
     // Gemini API Handling (supports PDF/image uploads via native format)
@@ -25,6 +26,9 @@ export const executeGeminiPrompt = async (
   } else if (isKimiAPI && files && files.length > 0) {
     // Kimi API 需要先上传文件再引用
     return await executeWithKimi(promptText, files, systemInstruction, config);
+  } else if (isQwenAPI && files && files.length > 0) {
+    // Qwen API 不支持文件上传，给出友好提示
+    throw new Error('QWEN_NO_FILE_SUPPORT: Qwen API 暂不支持 PDF 文件上传。建议：1) 改用 Kimi API；2) 或手动复制文本内容进行分析。');
   } else {
     // OpenAI-compatible API Handling (supports images via Vision API)
     return await executeWithOpenAICompatible(promptText, files, systemInstruction, config);
@@ -214,21 +218,31 @@ const executeWithOpenAICompatible = async (
   // Check if it's GLM API (uses different endpoint structure)
   const isGLM = config.baseUrl?.includes('bigmodel.cn');
   const isDeepSeek = config.baseUrl?.includes('deepseek.com');
+  const isQwen = config.baseUrl?.includes('dashscope.aliyuncs.com');
   const needsProxy = isDeepSeek || isGLM; // DeepSeek 和 GLM 需要代理
   
   // Construct messages for OpenAI compatible endpoint with Vision API support
   const contentParts: any[] = [];
   
   // Add images/PDFs (Vision API format)
-  // Supported by: Gemini (native PDF), Qwen-VL, GLM-4V, Kimi, GPT-4V (images only)
+  // Qwen requires special "file" type instead of "image_url"
   if (files && files.length > 0) {
     files.forEach(file => {
-      contentParts.push({
-        type: "image_url",
-        image_url: {
-          url: `data:${file.mimeType};base64,${file.data}`
-        }
-      });
+      if (isQwen) {
+        // Qwen 使用 "file" 类型（DashScope 文档问答格式）
+        contentParts.push({
+          type: "file",
+          file: `data:${file.mimeType};base64,${file.data}`
+        });
+      } else {
+        // 其他模型使用标准 image_url 格式
+        contentParts.push({
+          type: "image_url",
+          image_url: {
+            url: `data:${file.mimeType};base64,${file.data}`
+          }
+        });
+      }
     });
   }
   
